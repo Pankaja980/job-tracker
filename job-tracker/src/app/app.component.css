@@ -1,0 +1,23 @@
+/* Centering content */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  header {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  

@@ -1,0 +1,19 @@
+<!-- 
+<div *ngFor="let job of jobApplications">
+    <app-job-item [job]="job"></app-job-item>  ✅ Using JobItemComponent -->
+  <!-- </div> -->
+  <h2>Job Applications</h2>
+
+  <!-- <button (click)="addNewJob()">Add New Job</button> -->
+  
+  <!-- Ensure the form is being used -->
+  <div *ngIf="selectedJob">
+    <app-job-form [job]="selectedJob" (saveJob)="saveJob($event)"></app-job-form>
+  </div>
+  
+  <ul>
+    <li *ngFor="let job of jobApplications">
+      <app-job-item [job]="job"></app-job-item> <!-- ✅ Pass job data -->
+      <button (click)="editJob(job)">Edit</button>
+    </li>
+  </ul>

@@ -1,0 +1,20 @@
+<form (ngSubmit)="onSubmit()">
+    <label>Job Title:</label>
+    <input type="text" [(ngModel)]="job.title" name="title" required />
+  
+    <label>Company:</label>
+    <input type="text" [(ngModel)]="job.company" name="company" required />
+  
+    <label>Status:</label>
+    <select [(ngModel)]="job.status" name="status">
+      <option value="Applied">Applied</option>
+      <option value="Interview">Interview</option>
+      <option value="Rejected">Rejected</option>
+      <option value="Accepted">Accepted</option>
+    </select>
+    
+    <label>Category:</label>
+    <app-job-category-selector (categorySelected)="job.category = $event"></app-job-category-selector>
+    <button type="submit">Save</button>
+  </form>
+  
