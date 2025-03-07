@@ -1,30 +1,42 @@
 import { Component,EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+//import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { JobCategoryService } from '../../services/job-category.service';
+//import { JobCategoryService } from '../../services/job-category.service';
 import { JobCategory } from '../../models/job-category';
 // interface JobCategory {
 //   name: string; // ✅ Ensure JobCategory has a 'name' property
 // }
-// import { Store } from '@ngrx/store';
-// import { Observable } from 'rxjs';
-// //import { JobCategory } from '../../models/job-category';
-// import { loadJobCategories } from '../../state/job-category/actions';
-// import { selectJobCategories } from '../../state/job-category/selectors';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+//import { JobCategory } from '../../models/job-category';
+import { loadJobCategories } from '../../state/job-category/actions';
+import { selectJobCategories } from '../../state/job-category/selector';
 @Component({
   selector: 'app-job-category-selector',
   imports: [CommonModule],
   templateUrl: './job-category-selector.component.html',
   styleUrl: './job-category-selector.component.css',
-  providers: [JobCategoryService],
+  //providers: [JobCategoryService],
 })
 export class JobCategorySelectorComponent implements OnInit {
-  categories: string[] = [];
+  categories$!: Observable<string[] >;
   selectedCategory: string = '';
+  private store = inject(Store);
+
 
   @Output() categorySelected = new EventEmitter<string>();
 
-  private jobCategoryService = inject(JobCategoryService);
+  ngOnInit(): void {
+    this.categories$ = this.store.select(selectJobCategories);
+    this.store.dispatch(loadJobCategories());
+  }
+
+  onCategorySelect(event: Event): void {
+    const selectedCategory = (event.target as HTMLSelectElement).value;
+    this.categorySelected.emit(selectedCategory);
+  }
+}
+  //private jobCategoryService = inject(JobCategoryService);
   // private apiUrl = 'https://www.themuse.com/api/public/jobs';
 
   // constructor(private http: HttpClient) {}
@@ -47,25 +59,26 @@ export class JobCategorySelectorComponent implements OnInit {
 //     this.categorySelected.emit(this.selectedCategory);
 //   }
 // }
-ngOnInit() {
-  this.jobCategoryService.getJobCategories().subscribe((categories: JobCategory[]) => {
-    if (categories) {
+/*ngOnInit() {
+  this.jobCategoryService.getJobCategories().subscribe(categories => {
+    
     this.categories = [...new Set(categories.map(category => category.name))]; // ✅ Remove duplicates
-    }
-  });
-}
+    });
+  };
+
 
 onCategoryChange(event: Event) {
-  const selectElement = event.target as HTMLSelectElement;
-//   this.categorySelected.emit(selectedCategory);
+  //const selectElement = event.target as HTMLSelectElement;
+  const selectedCategory = (event.target as HTMLSelectElement).value;
+   this.categorySelected.emit(selectedCategory);*/
 // 
-  if (selectElement) {
-    this.selectedCategory = selectElement.value;
-    this.categorySelected.emit(this.selectedCategory);
-}
-}
-}
-// import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
+//   if (selectElement) {
+//     this.selectedCategory = selectElement.value;
+//     this.categorySelected.emit(this.selectedCategory);
+// }
+// }
+// }
+// // import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
 // import { CommonModule } from '@angular/common';
 // import { HttpClient } from '@angular/common/http';
 // import { Observable } from 'rxjs';

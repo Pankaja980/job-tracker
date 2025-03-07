@@ -14,7 +14,7 @@
     </select>
     
     <label>Category:</label>
-    <app-job-category-selector (categorySelected)="job.category = $event"></app-job-category-selector>
+    <app-job-category-selector (categorySelected)="onCategorySelected($event)"></app-job-category-selector>
     <button type="submit">Save</button>
   </form>
   

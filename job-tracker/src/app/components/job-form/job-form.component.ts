@@ -19,9 +19,12 @@ import { JobApplication } from '../../services/job.service';
 })
 export class JobFormComponent {
   @Input() job: JobApplication = { id: 0, title: '', company: '', status: '', category: '' };
-  @Output() saveJob = new EventEmitter<JobApplication>();
+  @Output() save = new EventEmitter<JobApplication>();
 
+  onCategorySelected(category: string) {
+    this.job.category = category;
+  }
   onSubmit() {
-    this.saveJob.emit(this.job);
+    this.save.emit(this.job);
   }
 }

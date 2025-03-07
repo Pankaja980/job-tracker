@@ -1,7 +1,7 @@
 <label for="job-category">Category:</label>
-<select id="job-category" (change)="onCategoryChange($event)">
+<select id="job-category" (change)="onCategorySelect($event)">
   <!-- <option value="">Select Category</option> -->
-  <option *ngFor="let category of categories" [value]="category">
+  <option *ngFor="let category of categories$ | async" [value]="category">
     {{ category }}
   </option>
 </select>

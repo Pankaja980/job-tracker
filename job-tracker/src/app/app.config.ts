@@ -1,10 +1,19 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { jobCategoryReducer } from './state/job-category/reducer';
+import { JobCategoryEffects } from './state/job-category/effects';
 import { routes } from './app.routes';
 
+// export const appConfig: ApplicationConfig = {
+//   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+// };
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  providers: [
+    provideStore({ jobCategory: jobCategoryReducer }),
+    provideEffects(JobCategoryEffects)
+  ],
 };
 // import { ApplicationConfig } from '@angular/core';
 // import { provideHttpClient, withFetch } from '@angular/common/http'; // ✅ Provide HttpClient globally

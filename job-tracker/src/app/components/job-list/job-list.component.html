@@ -8,7 +8,7 @@
   
   <!-- Ensure the form is being used -->
   <div *ngIf="selectedJob">
-    <app-job-form [job]="selectedJob" (saveJob)="saveJob($event)"></app-job-form>
+    <app-job-form [job]="selectedJob" (save)="saveJob($event)"></app-job-form>
   </div>
   
   <ul>
