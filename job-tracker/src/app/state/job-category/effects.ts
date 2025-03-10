@@ -1,23 +1,28 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { JobCategoryService } from '../../services/job-category.service';
+import { JobService } from '../../services/job-category.service';
 //import * as JobCategoryActions from './../job-category/actions';
-import { loadJobCategories, loadJobCategoriesSuccess, loadJobCategoriesFailure } from './actions';
+//import { loadJobCategories, loadJobCategoriesSuccess, loadJobCategoriesFailure } from './actions';
+import { loadJobs } from './actions';
 
-@Injectable()
-export class JobCategoryEffects {
+@Injectable({
+  providedIn:'root',
+})
+export class JobEffects {
+  private actions$ = inject(Actions);
+  private jobService = inject(JobService);
   loadJobCategories$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadJobCategories),
+      ofType(loadJobs),
       mergeMap(() =>
-        this.jobCategoryService.fetchJobCategories().pipe(
-          map(categories => loadJobCategoriesSuccess({ categories })),
-          catchError(error => of(loadJobCategoriesFailure({ error: error.message })))
+        this.jobService.getJobApplications().pipe(
+          map(jobs => ({ type: '[Job] Load Jobs Success', jobs })),
+          catchError((error) => of({ type: '[Job] Load Jobs Failure', error }))
         )
       )
     )
   );
 
-  constructor(private actions$: Actions, private jobCategoryService: JobCategoryService) {}
+  //constructor(private actions$: Actions, private jobService: JobService) {}
 }

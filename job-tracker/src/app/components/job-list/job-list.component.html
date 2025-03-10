@@ -2,18 +2,57 @@
 <div *ngFor="let job of jobApplications">
     <app-job-item [job]="job"></app-job-item>  ✅ Using JobItemComponent -->
   <!-- </div> -->
-  <h2>Job Applications</h2>
+  <!-- <h2>Job Applications</h2>
 
   <!-- <button (click)="addNewJob()">Add New Job</button> -->
   
   <!-- Ensure the form is being used -->
-  <div *ngIf="selectedJob">
+  <!-- <div *ngIf="selectedJob">
     <app-job-form [job]="selectedJob" (save)="saveJob($event)"></app-job-form>
   </div>
   
   <ul>
     <li *ngFor="let job of jobApplications">
       <app-job-item [job]="job"></app-job-item> <!-- ✅ Pass job data -->
-      <button (click)="editJob(job)">Edit</button>
+      <!-- <button (click)="editJob(job)">Edit</button>
     </li>
-  </ul>
+  </ul> --> 
+  <h2>Job Applications</h2>
+
+  <h2>All Formatted Jobs</h2>
+<ul>
+  <div *ngFor="let job of formattedJobs  ">
+    <strong>{{ job.title }}</strong> at {{ job.company }} - Status: {{ job.status }}
+  </div>
+</ul>
+
+<h2>Job Summary</h2>
+<ul>
+  <li *ngFor="let key of jobSummary | keyvalue">
+    {{ key.key }}: {{ key.value }} jobs
+  </li>
+</ul>
+
+<h2>Applied Jobs</h2>
+<ul>
+  <li *ngFor="let job of appliedJobs">{{ job.title }} at {{ job.company }}</li>
+</ul>
+
+<h2>Interview Scheduled</h2>
+<ul>
+  <li *ngFor="let job of interviewJobs">{{ job.title }} at {{ job.company }}</li>
+</ul>
+
+<h2>Rejected Jobs</h2>
+<ul>
+  <li *ngFor="let job of rejectedJobs">{{ job.title }} at {{ job.company }}</li>
+</ul>
+
+<h2>Offer Received</h2>
+<ul>
+  <li *ngFor="let job of offerJobs">{{ job.title }} at {{ job.company }}</li>
+</ul>
+
+
+  
+  

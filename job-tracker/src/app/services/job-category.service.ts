@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable,catchError, map, throwError } from 'rxjs';
 //import { map } from 'rxjs/operators';
 //import { JobCategory } from '../models/job-category';
+import { Job } from '../models/job';
+import { JobApplication } from '../models/job.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class JobCategoryService {
+export class JobService {
   private apiUrl = 'https://www.themuse.com/api/public/jobs?page=1';
 
   constructor(private http: HttpClient) {}
@@ -43,7 +45,7 @@ export class JobCategoryService {
 //     })
 //   );
 // }
-fetchJobCategories(): Observable<string[]> {
+getJobs(): Observable<string[]> {
   return this.http.get<any>(this.apiUrl).pipe(
     map(response => {
       // Ensure categories exist and extract their names
@@ -63,6 +65,9 @@ fetchJobCategories(): Observable<string[]> {
       return throwError(() => new Error('Failed to fetch job categories'));
     })
   );
+}
+getJobApplications(): Observable<JobApplication[]> {
+  return this.http.get<JobApplication[]>(`${this.apiUrl}/job-applications`);
 }
 
 }

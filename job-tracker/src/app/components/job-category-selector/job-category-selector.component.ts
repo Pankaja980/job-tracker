@@ -9,8 +9,8 @@ import { JobCategory } from '../../models/job-category';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 //import { JobCategory } from '../../models/job-category';
-import { loadJobCategories } from '../../state/job-category/actions';
-import { selectJobCategories } from '../../state/job-category/selector';
+import { loadJobs } from '../../state/job-category/actions';
+import { selectJobCategories, selectJobState } from '../../state/job-category/selector';
 @Component({
   selector: 'app-job-category-selector',
   imports: [CommonModule],
@@ -19,16 +19,16 @@ import { selectJobCategories } from '../../state/job-category/selector';
   //providers: [JobCategoryService],
 })
 export class JobCategorySelectorComponent implements OnInit {
-  categories$!: Observable<string[] >;
+  jobCategories$!: Observable<string[] >;
   selectedCategory: string = '';
-  private store = inject(Store);
+   constructor(private store: Store){}
 
 
   @Output() categorySelected = new EventEmitter<string>();
 
   ngOnInit(): void {
-    this.categories$ = this.store.select(selectJobCategories);
-    this.store.dispatch(loadJobCategories());
+    this.jobCategories$ = this.store.select(selectJobCategories);
+    //this.store.dispatch(loadJobCategories());
   }
 
   onCategorySelect(event: Event): void {
