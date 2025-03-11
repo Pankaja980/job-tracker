@@ -16,7 +16,7 @@ export interface JobApplication {
   providedIn: 'root'
 })
 export class JobService {
-  private apiUrl ="https://www.themuse.com/api/public/jobs" ; // Replace with your API URL
+  private apiUrl ="https://www.themuse.com/api/public/jobs?page=1" ; // Replace with your API URL
 
   constructor(private http: HttpClient) {}
 
@@ -39,10 +39,27 @@ export class JobService {
       //     company: job.company?.name ?? 'Unknown', // Handle missing company
       //     status: 'Open' 
       //   }));
-      getJobs(page: number = 1) {
-        return this.http.get<{ results: Job[] }>(`${this.apiUrl}?page=${page}`);
-      }
+      getJobs(): Observable<Job[] > {
+        return this.http.get<{ results: any[] }>(this.apiUrl).pipe(
+          map(response => {
+            console.log('API Response:', response);
+
+            if (!response.results || !Array.isArray(response.results)) {
+              console.error('Invalid API response format:', response);
+              return [];
+            }
+
+            return response.results.map(job => ({
+            id: job.id??0,
+            title: job.name?? 'No Title',  // Extracting name from title object
+            company: job.company?.name?? 'Unknown', // Extracting name from company object
+            status: job.status??'Open'
+          }));
+      })
+      // this.http.get(`${this.apiUrl}?page=1`).subscribe(response => console.log(response));
+    );
       
-      }
+  }
+}
     
   

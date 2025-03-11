@@ -17,42 +17,62 @@
       <!-- <button (click)="editJob(job)">Edit</button>
     </li>
   </ul> --> 
+ 
+  <p-toast></p-toast>
+
   <h2>Job Applications</h2>
 
-  <h2>All Formatted Jobs</h2>
-<ul>
-  <div *ngFor="let job of formattedJobs  ">
-    <strong>{{ job.title }}</strong> at {{ job.company }} - Status: {{ job.status }}
+<div class="p-mb-4">
+  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="addNewJob()"></button>
+</div>
+
+<p-table [value]="jobs"  responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
+
+      <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
+      
+      <th>Status</th>
+
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-job>
+    <tr *ngFor="let job of jobs">
+      <td *ngIf="job?.title">{{ job.title }}</td>
+      <td *ngIf="job?.company">{{ job.company }}</td>
+
+      <td *ngIf="job?.category">{{ job.status }}</td>
+      <td>
+        <button pButton type="button" label="Edit" icon="pi pi-pencil"  (click)="editJob(job)"></button>
+        <button pButton type="button" label="Delete" icon="pi pi-trash" (click)="deleteJob(job)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="displayDialog" header="Job Details" [modal]="true">
+  <div class="p-fluid">
+    <div class="p-field" *ngIf="selectedJob">
+      <label for="title">Job Title</label>
+      <input id="title" type="text"  pInputText  [(ngModel)]="selectedJob.title" />
+    </div>
+    <div class="p-field" *ngIf="selectedJob">
+      <label for="company">Company</label>
+      <input id="company" type="text" pInputText [(ngModel)]="selectedJob!.company" />
+    </div>
+    <div class="p-field" *ngIf="selectedJob">
+      <label for="status">Status</label>
+      <p-dropdown id="status" [(ngModel)]="selectedJob!.status" [options]="['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received']"></p-dropdown>
+    </div>
   </div>
-</ul>
+  <p-footer>
+    <button pButton type="button" label="Save" icon="pi pi-check" (click)="saveJob()"></button>
+    <button pButton type="button" label="Cancel" icon="pi pi-times" (click)="displayDialog = false"></button>
+  </p-footer>
+</p-dialog>
 
-<h2>Job Summary</h2>
-<ul>
-  <li *ngFor="let key of jobSummary | keyvalue">
-    {{ key.key }}: {{ key.value }} jobs
-  </li>
-</ul>
+<p-chart type="pie" [data]="chartData" [options]="chartOptions" style="width: 100%; height: 300px;"></p-chart>
 
-<h2>Applied Jobs</h2>
-<ul>
-  <li *ngFor="let job of appliedJobs">{{ job.title }} at {{ job.company }}</li>
-</ul>
-
-<h2>Interview Scheduled</h2>
-<ul>
-  <li *ngFor="let job of interviewJobs">{{ job.title }} at {{ job.company }}</li>
-</ul>
-
-<h2>Rejected Jobs</h2>
-<ul>
-  <li *ngFor="let job of rejectedJobs">{{ job.title }} at {{ job.company }}</li>
-</ul>
-
-<h2>Offer Received</h2>
-<ul>
-  <li *ngFor="let job of offerJobs">{{ job.title }} at {{ job.company }}</li>
-</ul>
-
-
-  
   

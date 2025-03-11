@@ -3,8 +3,9 @@ import { provideRouter } from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { jobCategoryReducer } from './state/job-category/reducer';
-import { JobCategoryEffects } from './state/job-category/effects';
+//import { JobCategoryEffects } from './state/job-category/effects';
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 // export const appConfig: ApplicationConfig = {
 //   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
@@ -12,7 +13,8 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideStore({ jobCategory: jobCategoryReducer }),
-    provideEffects(JobCategoryEffects)
+    //provideEffects(JobCategoryEffects),
+    provideHttpClient()
   ],
 };
 // import { ApplicationConfig } from '@angular/core';

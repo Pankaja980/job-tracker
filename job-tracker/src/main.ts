@@ -13,7 +13,7 @@ import { JobEffects } from './app/state/job-category/effects';
 
 bootstrapApplication(AppComponent, {
   providers: [provideHttpClient(), 
-    provideStore({}),
+    provideStore(),
     provideState(jobFeature), 
     provideState(jobCategoryFeature),
      provideEffects(JobEffects), 

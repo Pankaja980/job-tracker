@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable,catchError, map, throwError } from 'rxjs';
 //import { map } from 'rxjs/operators';
 //import { JobCategory } from '../models/job-category';
-import { Job } from '../models/job';
+//import { Job } from '../models/job';
 import { JobApplication } from '../models/job.model';
 
 @Injectable({
