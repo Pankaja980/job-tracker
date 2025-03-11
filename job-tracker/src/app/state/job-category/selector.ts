@@ -1,16 +1,23 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { jobCategoryFeature, JobState } from '../job-category/reducer';
-import { JobApplication } from '../../models/job.model';
+import { Job } from '../../models/job';
 import { JobCategoryState } from './reducer';
 
 // ✅ Select the job category feature state
-export const selectJobState = jobCategoryFeature.selectJobCategoryState;//createFeatureSelector<JobState>('jobCategory');
+export const selectJobState = createFeatureSelector<JobState>('jobState');//jobCategoryFeature.selectJobCategoryState;//createFeatureSelector<JobState>('jobCategory');
 
 // ✅ Select job categories from the state
-export const selectJobs = jobCategoryFeature.selectJobs;//createSelector(
+//export const selectJobs = jobCategoryFeature.selectJobs;//createSelector(
 //   selectJobState,
 //   (state) => state.jobs
 // );
+export const selectJobs = createSelector(
+  selectJobState,
+  (state) => {
+    console.log("📌 NgRx State:", state); // ✅ Debug: Log the entire state
+    return state?.jobs || []; // Ensure it returns an array
+  }
+);
 export const selectJobCategoryState = createFeatureSelector<JobCategoryState>('jobCategory');
 
 // ✅ Select job categories from the state

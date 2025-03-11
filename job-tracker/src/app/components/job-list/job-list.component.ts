@@ -1,487 +1,210 @@
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { JobItemComponent } from '../job-item/job-item.component';
-// import { JobService} from '../../services/job.service';
-// import { HttpClientModule } from '@angular/common/http';
-// import { JobFormComponent} from '../job-form/job-form.component';
-// import { JobApplication } from '../../services/job.service';
-
-// @Component({
-//   selector: 'app-job-list',
-//   standalone: true, // ✅ Standalone component
-//   imports: [CommonModule, JobItemComponent, HttpClientModule,JobFormComponent], // ✅ Import dependencies
-//   templateUrl: './job-list.component.html',
-//   styleUrls: ['./job-list.component.css']
-// })
-// export class JobListComponent implements OnInit {
-//   jobApplications: JobApplication[] = [];
-//   selectedJob: JobApplication | null = null;
-//   newJob: JobApplication = { id: 0, title: '', company: '', status: '' };
-//   editingJob: JobApplication | null = null;
-//   errorMessage: string = '';
-//   constructor(private jobService: JobService) {}
-
-//   ngOnInit(): void {
-//     // this.fetchJobs();
-//     this.jobService.getJobApplications().subscribe(jobs => this.jobApplications = jobs);
-//   }
-
-//   // fetchJobs(): void {
-//   //   this.jobService.getJobApplications().subscribe({
-//   //     next: (data) => (this.jobApplications = Array.isArray(data) ? data : []),
-//   //     error: (error) => console.error('Error fetching jobs:', error)
-//   //   });
-//   // }
-//   addNewJob() {
-//     this.selectedJob = { id: 0, title: '', company: '', status: '' };
-//   }
-
-//   editJob(job: JobApplication) {
-//     this.selectedJob = { ...job }; // Clone to avoid direct mutation
-//   }
-
-//   saveJob(updatedJob: JobApplication) {
-// //     if (job.id === 0) {
-// //       job.id = this.jobApplications.length + 1;
-// //       this.jobApplications.push(job);
-// //     } else {
-// //       const index = this.jobApplications.findIndex((j) => j.id === job.id);
-// //       if (index > -1) {
-// //         this.jobApplications[index] = job;
-// //       }
-// //     }
-// //     this.selectedJob = null; // Hide form after save
-// //   }
-// // }
-// const index = this.jobApplications.findIndex(j => j.id === updatedJob.id);
-//     if (index !== -1) {
-//       this.jobApplications[index] = updatedJob;
-//     } else {
-//       this.jobApplications.push(updatedJob);
-//     }
-//     this.selectedJob = null; // Hide form after save
-//   }
-// }
-import { Component, OnInit, inject } from '@angular/core';
-import { Store ,provideState} from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { selectFormattedJobs, selectJobsByStatus, selectJobSummary } from '../../state/job-category/selector';
-//import { Job } from '../models/job';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, map,startWith } from 'rxjs';
 import { Job } from '../../models/job';
-
-import { JobService } from '../../services/job.service';  // Import JobApplication
-import { map } from 'rxjs/operators';
-import { CommonModule } from '@angular/common';
+import { selectJobs } from '../../state/job-category/selector';
+import { loadJobs ,deleteJob,updateJob,addJob } from '../../state/job-category/actions';
 import { JobItemComponent } from '../job-item/job-item.component';
-import { jobFeature, jobReducer } from '../../state/job-category/reducer';
-import { loadJobs } from '../../state/job-category/actions';
-//import { PrimeNGConfig } from 'primeng/api';
+import { JobFormComponent } from '../job-form/job-form.component';
+import { JobCategorySelectorComponent } from '../job-category-selector/job-category-selector.component';
+import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ChartModule } from 'primeng/chart';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { HttpClient } from '@angular/common/http';
-import Chart from 'chart.js/auto';
+import { JobService } from '../../services/job.service';
+import { ToastModule } from 'primeng/toast';
+import { JobApplication } from '../../models/job.model';
 
 @Component({
   selector: 'app-job-list',
+  standalone: true,
+  imports: [CommonModule, 
+    TableModule, 
+    DialogModule,
+     ChartModule,
+      //JobItemComponent,
+       JobFormComponent,
+        JobCategorySelectorComponent,
+      ToastModule],
   templateUrl: './job-list.component.html',
   styleUrls: ['./job-list.component.css'],
-  imports:[CommonModule,
-    TableModule, 
-    DialogModule, 
-    ToastModule, 
-    ChartModule,
-    FormsModule,
-    ButtonModule,
-  DropdownModule],
-  providers: [MessageService]//[provideState(jobFeature)]
 })
-
-
 export class JobListComponent implements OnInit {
-  jobs: Job[] = [];
-  selectedJob: Job | null = null;
+  private store = inject(Store);
+  private messageService = inject(MessageService);
+  private jobService=inject(JobService)
+
+  filteredJobs:Job[]=[];
   displayDialog: boolean = false;
-  jobSummary: Record<string,number>={};
-  chartData: any={};
+  // Fetch jobs from NgRx store
+  jobs$: Observable<Job[]> = this.store.select(selectJobs);
   chartOptions: any;
-  jobStatuses = ['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received'];
-  //apiUrl = 'https://www.themuse.com/api/public/jobs?page=1';
-  // appliedJobs$!: Observable<Job[]>;
-  // interviewJobs$!: Observable<Job[]>;
-  // rejectedJobs$!: Observable<Job[]>;
-  // offerJobs$!: Observable<Job[]>;
-  // formattedJobs$!: Observable<{ title: string; company: string; status: string }[]>;
-  // jobSummary$!: Observable<Record<string, number>>;
 
-  // appliedJobs: Job[] = [];
-  // interviewJobs: Job[] = [];
-  // rejectedJobs: Job[] = [];
-  // offerJobs: Job[] = [];
-  // //store = inject(Store);
+  // Signal for selected job (editing mode)
+  selectedJob = signal<Job | null>(null);
+  isEditing = computed(() => this.selectedJob() !== null);
 
-  // formattedJobs: { title: string; company: string; status: string }[] = []; // ✅ Formatted jobs
-  // jobSummary: Record<string, number> = {};
-  constructor(private store: Store, private jobService: JobService, private messageService: MessageService,private http: HttpClient) {}
-
-  ngOnInit(): void {
-    this.fetchJobs();
+  // Available application statuses
+  statuses = ['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received'];
+  selectedStatus = signal<string>('All'); // Default: Show all jobs
+  constructor() {
+    this.chartOptions = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Job Applications Summary',
+        },
+      },
+    };
   }
-  // fetchJobs(): void {
-  //   this.jobService.getJobs().subscribe({
-  //     next: (response) => {
-  //       console.log('API Response:', response);
-  //       if (!response.results || !Array.isArray(response.results)) {
-  //         console.error('Invalid job data structure:', response);
-  //         return;
-  //       }
-    //     this.jobs = response.results.map(job => ({;  // ✅ Extract jobs from `results`
-    //     // this.categorizeJobs();
-    //     // this.formatJobs();
-    //     // this.generateJobSummary();
-    //     // this.jobs = response.results.map(job => ({
-    //       id:job.id ??Math.random(),
-    //       title: job.name,  // ✅ Extract correct job title
-    //       company: job.company.name,  // ✅ Extract company name
-    //       category: job.categories.length ? job.categories[0].name : 'Unknown',
-    //       location: job.locations.length ? job.locations[0].name : 'Remote',
-    //       level: job.levels.length ? job.levels[0].name : 'Not Specified',
-    //       status: 'Applied'  // ✅ Default status if not provided
-    //     }));
-      
+  // Computed filtered jobs based on selected status
+   filteredJobs$ : Observable<Job[]> = this.jobs$.pipe(//=this.jobs$.pipe(        //= computed(() =>
+    map(jobs =>Array.isArray( jobs) 
+   ? this.selectedStatus() === 'All' 
+   ? jobs : jobs.filter(job => job.status === this.selectedStatus())
+   : []),
+   startWith([]) // Ensures the observable starts with an empty array
+ );
+  //     map(jobs => 
+  //       jobs && jobs.length > 0 ?
+  //       (this.selectedStatus() === 'All'
+  //         ? jobs
+  //         : jobs.filter(job => job.status === this.selectedStatus()))
+  //         :[]
+  //     ),
+  //     startWith([])
+  //   );
+  
+
+  // Computed job summary (reduce function)
+  jobSummary$: Observable<{ status: string; count: number }[]> = this.jobs$.pipe( 
     
-    //   error: (error) => console.error('Error fetching jobs:', error)
-    // });
-    // this.jobs = response.results.map(job => ({
-    //   id: job.id ?? Math.random(), // ✅ Assign a unique ID if missing
-    //   title: job.title ?? 'No Title',  // ✅ API may use `name`
-      //company:job.company?.name ?? 'Unknown',//job.company && typeof job.company === 'object' && 'name' in job.company 
-      //? (job.company as { name: string }).name 
-      //: 'Unknown',// typeof job.company === 'object' ? job.company?.name ?? 'Unknown' : job.company ?? 'Unknown',// job.company?.name ?? 'Unknown', 
-  //     company: typeof job.company === 'object' && job.company !== null
-  // ? job.company.name
-  // : job.company ?? 'Unknown',
-  // company: typeof job.company === 'object' && job.company !== null && 'name' in job.company
-  // ? job.company.name
-  // : job.company ?? 'Unknown',
-  // company: typeof job.company === 'object' && job.company !== null
-  // ? (job.company as { name?: string }).name ?? 'Unknown'
-  // : job.company ?? 'Unknown',
+      map(jobs =>
+        this.statuses.map(status => ({
+          status,
+          count: jobs.filter(job => job.status === status).length,
+        }))
+      )
+    );
+  
 
-  //     category: Array.isArray(job.category) ? job.category?.[0]?.name ?? 'Unknown' : job.category ?? 'Unknown', //job.category?.[0]?.name ?? 'Unknown',
-      //location: job.locations?.[0]?.name ?? 'Remote',
-      //level: job.levels?.[0]?.name ?? 'Not Specified',
-    //   status: 'Applied'  // ✅ Default status
-    // }));
-    // this.generateJobSummary();
-    // this.updateChart();
-   // console.log('Formatted Jobs:', this.jobs); // ✅ Verify the formatted output
-//   },
-//   error: (error) => console.error('Error fetching jobs:', error)
-// });
-//   }
-// fetchJobs() {
-//   this.http.get<{ results: any[] }>('https://www.themuse.com/api/public/jobs?page=1')
-//     .subscribe(
-//       response => {
-//         console.log('API Response:', response);
+  // Chart data for job summary
+  chartData$ : Observable<any> = this.jobSummary$.pipe(
+    map(jobSummary => ({
+    labels: this.statuses,
+    datasets: [
+      {
+        data: jobSummary.map(s => s.count),
+        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350'],
+      },
+    ],
+  }))
+);
 
-//         // Ensure results exist
-//         if (!response.results) {
-//           this.jobs = [];
-//           this.store.dispatch(loadJobs({ jobs: [] }));
-//           return;
-//         }
+openDialog() {
+  this.displayDialog = true;
+}
 
-//         const jobs :Job[]= response.results.map((job): Job => ({
-//           id: job.id ?? Math.random(),
-//           title: job.title ?? 'No Title',
-//           company: job.company?.name ?? 'Unknown Company',
-//           category: Array.isArray(job.categories) ? job.categories[0]?.name ?? 'Unknown' : 'Unknown',
-//           status: 'Applied'
-//         }));
-//         this.jobs = jobs;
-//         this.store.dispatch(loadJobs({ jobs }));
-//         this.generateJobSummary()
-//       },
-//       error => {
-//         console.error('Error fetching jobs:', error);
-//         this.jobs = []; // Ensure jobs is always an array to avoid null issues
-//         this.store.dispatch(loadJobs({ jobs: [] }));
-//       }
-//     );
-// }
-//   addNewJob(): void {
-//     this.selectedJob = { id: 0, title: '', company: '',category:'', status: 'Applied' };
-//     this.displayDialog = true;
-//   }
+// Function to close the dialog
+closeDialog() {
+  this.displayDialog = false;
+}
 
-//   editJob(job: Job): void {
-//     this.selectedJob = { ...job };
-//     this.displayDialog = true;
-//   }
+  ngOnInit() {
+    // ✅ Fetch jobs from API
+    // this.filteredJobs$.subscribe(jobs => {
+    //   this.filteredJobs = jobs || []; // Ensures filteredJobs is always an array
+    //   console.log("filtered Jobs:",jobs);
+    this.jobs$.subscribe(jobs => {console.log(" Jobs in Store:", jobs)
+      if (!jobs || jobs.length === 0) {
+        console.warn("⚠️ No jobs found in store. Check if `loadJobs` action is dispatched.");
+      }
+    });
 
-//   saveJob(): void {
-//     if (this.selectedJob) {
-//       if (this.selectedJob.id === 0) {
-//         this.selectedJob.id = this.jobs.length + 1;
-//         this.jobs.push(this.selectedJob);
-//         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Job Added' });
-//       } else {
-//         const index = this.jobs.findIndex(j => j.id === this.selectedJob!.id);
-//         if (index !== -1) {
-//           this.jobs[index] = this.selectedJob!;
-//           this.messageService.add({ severity: 'info', summary: 'Updated', detail: 'Job Updated' });
-//         }
-//       }
-//       this.selectedJob = null;
-//       this.displayDialog = false;
-//       this.generateJobSummary();
-//       this.updateChart();
-//     }
-//   }
+  // ✅ Debugging: Check filtered jobs
+  this.filteredJobs$.subscribe(jobs =>{
 
-//   deleteJob(job: Job): void {
-//     this.jobs = this.jobs.filter(j => j.id !== job.id);
-//     this.messageService.add({ severity: 'warn', summary: 'Deleted', detail: 'Job Deleted' });
-//     this.generateJobSummary();
-//     this.updateChart();
-//   }
-
-//   generateJobSummary(): void {
-//     this.jobSummary = this.jobs.reduce((summary, job) => {
-//       summary[job.status] = (summary[job.status] || 0) + 1;
-//       return summary;
-//     }, {} as Record<string, number>);
-//   }
-
-//   updateChart(): void {
-//     this.chartData = {
-//       labels: Object.keys(this.jobSummary),
-//       datasets: [{
-//         data: Object.values(this.jobSummary),
-//         backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350']
-//       }]
-//     };
-
-//     this.chartOptions = {
-//       responsive: true,
-//       maintainAspectRatio: false
-//     };
-//   }
-// }
-
-// //   private categorizeJobs(): void {
-// //     this.appliedJobs = this.filterJobsByStatus("Applied");
-// //     this.interviewJobs = this.filterJobsByStatus("Interview Scheduled");
-// //     this.rejectedJobs = this.filterJobsByStatus("Rejected");
-// //     this.offerJobs = this.filterJobsByStatus("Offer Received");
-// //   }
-
-// //   private filterJobsByStatus(status: string): Job[] {
-// //     return this.jobs.filter(job => job.status === status);
-// //   }
-
-// //   private formatJobs(): void {
-// //     this.formattedJobs = this.jobs.map(job => ({
-// //       title: job.title,
-// //       company: job.company,
-// //       status: job.status
-// //     }));
-// //   }
-
-// //   private generateJobSummary(): void {
-// //     this.jobSummary = this.jobs.reduce((summary, job) => {
-// //       summary[job.status] = (summary[job.status] || 0) + 1;
-// //       return summary;
-// //     }, {} as Record<string, number>);
-// //   }
-// // }
-
-//     //this.store.dispatch(loadJobs({ job }));
-//   //   this.jobService.getJobs().subscribe((
-//   //     jobs: Job[]) => {
-//   //     this.store.dispatch(loadJobs({ jobs })); // ✅ Dispatch with fetched jobs
-//   //   });
-//   //   this.appliedJobs$ = this.store.select(selectJobsByStatus('Applied') || []).pipe(
-//   //     map(jobs => this.convertJobApplications(jobs))
-//   //   );
-//   //   this.interviewJobs$ = this.store.select(selectJobsByStatus('Interview Scheduled') || []).pipe(
-//   //     map(jobs => this.convertJobApplications(jobs))
-//   //   );
-//   //   this.rejectedJobs$ = this.store.select(selectJobsByStatus('Rejected') || []).pipe(
-//   //     map(jobs => this.convertJobApplications(jobs))
-//   //   );
-//   //   this.offerJobs$ = this.store.select(selectJobsByStatus('Offer Received') || []).pipe(
-//   //     map(jobs => this.convertJobApplications(jobs))
-//   //   );
-//   //   this.formattedJobs$ = this.store.select(selectFormattedJobs);
-//   //   this.jobSummary$ = this.store.select(selectJobSummary);
-//   // }
-//   // private convertJobApplications(jobs: JobApplication[]): Job[] {
-//   //   return jobs.map(job => ({
-//   //     id: job.id,
-//   //     title: job.title,
-//   //     company: job.company,
-//   //     category: job.category,
-//   //     status: this.normalizeStatus(job.status) // ✅ Ensure status is correctly mapped
-//   //   }));
-//   // }
-//   // private normalizeStatus(status: string): Job['status'] {
-//   //   const validStatuses: Job['status'][] = ["Applied", "Interview Scheduled", "Rejected", "Offer Received"];
-//   //   return validStatuses.includes(status as Job['status']) ? status as Job['status'] : "Applied"; // Default to 'Applied'
-//   // }
-// fetchJobs(): void {
-//   this.jobService.getJobs().subscribe(jobs => {
-//     this.jobs = [];
-//     this.store.dispatch(loadJobs({ jobs :[]}));
-//     this.generateJobSummary();
-//     this.updateChart();
-//   });
-// }
-// fetchJobs(): void {
-//   this.jobService.getJobs().subscribe({
-//     next: (response) => {
-//       if (!response.results || !Array.isArray(response.results)) {
-//         console.error('Invalid API response:', response);
-//         return;
-//       }
-//       //console.log('API Response:', response);
-//       this.jobs = response.results ?? []; // Ensure response is an array
-//       this.store.dispatch(loadJobs({ jobs: this.jobs }));
-//       this.generateJobSummary();
-//       this.updateChart();
-//     },
-//     error: (error) => {
-//       console.error('Error fetching jobs:', error);
-//     }
-//   });
-// }
-// fetchJobs() {
-//   this.http.get(this.apiUrl).subscribe(
-//     (response: any) => {
-//       this.jobs = response.results;
-//       console.log('Jobs:', this.jobs);
-//       this.generateJobSummary();
-//       this.updateChart();
-//     },
-fetchJobs(): void {
-  this.jobService.getJobs().subscribe(
-    (data: Job[])=>{
-    //(response => {
-      this.jobs = [...new Map(data.map(job=>[job.id,job])).values()];
-      console.log('API Response:', this.jobs); // ✅ Debugging
-      //this.jobs = jobs;
-       // ✅ Ensure we handle missing `results`
-       this.generateJobSummary();
-       this.updateChart();
+  console.log(" Filtered Jobs:", jobs)});
+  //    this.jobService.getJobs().subscribe({
+  //    //this.store.dispatch(loadJobs({jobs}));
+  //   // this.jobService.getJobs().subscribe(
+  //   //   (data:Job[])=>{
+  //   //     this.filteredJobs=[...new Map(data.map(job=>[job.id,job])).values()];
+  //   //     console.log('API Response:',this.filteredJobs);
+  //   //     this.jobSummary$;
+  //   //   },
+  //      next: (jobs: Job[]) => {
+  //      console.log("API response before dispatching:", jobs);
+  //     //   if (Array.isArray(jobs)) {
+  //          this.store.dispatch(loadJobs({ jobs }));
+  //     //     console.log("Api response",jobs)
+  //     //   } else {
+  //     //     console.error("Unexpected API response format:", jobs);
+  //     //   }
+  //      },
+  //      (error) => {
+  //       console.error("Error fetching jobs:", error);
+  //     }
+  // );
+  this.jobService.getJobs().subscribe({
+    next: (jobs: Job[]) => {
+      console.log('API Response:', jobs);
+      this.store.dispatch(loadJobs({ jobs })); // ✅ Dispatch jobs to store
     },
-    
-    (error) => {
-      console.error('Error fetching jobs:', error);
-    }
-  );
+    error: (error) => console.error("Error fetching jobs:", error),
+  });
   
 }
-// fetchJobs(): void {
-//   this.jobService.getJobs().subscribe({
-//     next: (response) => {
-//       if ( !Array.isArray(response)) {
-//         console.error('API response', response);
-//         return;
-//       }
-
-//       this.jobs = response.map(job => ({
-//         id: job.id,
-//         title: job.title,
-//         company: job.company,
-//         category: job.category,// job.category?.[0]?.name ?? 'Unknown' : job.category ?? 'Unknown',
-//         status: job.status   // ✅ Assign status dynamically
-//       }));
-
-//       this.generateJobSummary();
-//       this.updateChart();
-//     },
-//     error: (error) => console.error('Error fetching jobs:', error)
-//   });
-// }
 
 
-
-
-addNewJob(): void {
-  this.selectedJob = { id: 0, title: '', company: '', category: '', status: 'Applied' };
-  this.displayDialog = true;
-}
-
-editJob(job: Job): void {
-  this.selectedJob = { ...job };
-  this.displayDialog = true;
-}
-
-saveJob(): void {
-  if (this.selectedJob) {
-    if (this.selectedJob.id === 0) {
-      this.selectedJob.id = this.jobs.length + 1;
-      this.jobs.push(this.selectedJob);
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Job Added' });
-    } else {
-      const index = this.jobs.findIndex(j => j.id === this.selectedJob!.id);
-      if (index !== -1) {
-        this.jobs[index] = this.selectedJob!;
-        this.messageService.add({ severity: 'info', summary: 'Updated', detail: 'Job Updated' });
-      }
-    }
-    this.selectedJob = null;
-    this.displayDialog = false;
-    this.generateJobSummary();
-    this.updateChart();
+  // Open job form for editing
+  editJob(job: Job) {
+    this.selectedJob.set(job);
+    this.displayDialog=true;
   }
-}
 
-deleteJob(job: Job): void {
-  this.jobs = this.jobs.filter(j => j.id !== job.id);
-  this.messageService.add({ severity: 'warn', summary: 'Deleted', detail: 'Job Deleted' });
-  this.generateJobSummary();
-  this.updateChart();
-}
+  // Close job form
+  closeJobForm() {
+    this.selectedJob.set(null);
+    this.displayDialog=false;
+  }
 
-generateJobSummary(): void {
-  this.jobSummary = this.jobs.reduce((summary, job) => {
-    summary[job.status] = (summary[job.status] || 0) + 1;
-    return summary;
-  }, {} as Record<string, number>);
-}
-onRowSelect(event: any) {
-  console.log('Selected Job:', event.data);
-}
-
-
-updateChart(): void {
-  const statusCounts = this.jobs.reduce((counts, job) => {
-    counts[job.status] = (counts[job.status] || 0) + 1;
-    return counts;
-  }, {} as Record<string, number>);
-
-  this.chartData = {
-    labels: Object.keys(this.jobSummary),
-    datasets: [{
-      data: Object.values(this.jobSummary),
-      backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350']
-    }]
-  };
-
-  this.chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom' }
+  // Show success notification
+  showToast(message: string) {
+    this.messageService.add({ 
+      severity: 'success', 
+      summary: 'Success', 
+      detail: message, 
+      life: 3000 });
+  }
+  // deleteJob(jobId: number) {
+  //   this.store.dispatch(deleteJob({ jobId }));
+  // }
+  deleteJob(job: Job) {
+    if (confirm(`Are you sure you want to delete ${job.title}?`)) {
+      this.store.dispatch(deleteJob({ jobId: job.id }));
+      this.showToast('Job deleted successfully');
     }
-  };
-}
+  }
+  saveJob(job: Job) {
+    if (this.selectedJob()) {
+      // Update the existing job
+      this.store.dispatch(updateJob({ job })); // Assuming `updateJob` action exists
+      this.showToast('Job updated successfully!');
+    } else {
+      // Add new job
+      this.store.dispatch(addJob({ job })); // Assuming `addJob` action exists
+      this.showToast('Job added successfully!');
+    }
+  
+    // Close the job form
+    this.closeJobForm();
+  }
+  
+  
 }

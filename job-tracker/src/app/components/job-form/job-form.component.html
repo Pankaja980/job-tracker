@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()">
+<!-- <form (ngSubmit)="onSubmit()">
     <label>Job Title:</label>
     <input type="text" [(ngModel)]="job.title" name="title" required />
   
@@ -16,5 +16,40 @@
     <label>Category:</label>
     <app-job-category-selector (categorySelected)="onCategorySelected($event)"></app-job-category-selector>
     <button type="submit">Save</button>
+  </form> -->
+  <form *ngIf="job" (ngSubmit)="onSubmit()">
+    <!-- Job Title -->
+    <div class="p-field">
+      <label for="title">Job Title</label>
+      <input id="title" type="text" [(ngModel)]="job.title" name="title" required class="p-inputtext p-component" />
+    </div>
+  
+    <!-- Company Name -->
+    <div class="p-field">
+      <label for="company">Company</label>
+      <input id="company" type="text" [(ngModel)]="job.company" name="company" required class="p-inputtext p-component" />
+    </div>
+  
+    <!-- Job Category Selector -->
+    <div class="p-field">
+      <label for="category">Category</label>
+      <app-job-category-selector (categorySelected)="onCategorySelected($event)"></app-job-category-selector>
+    </div>
+  
+    <!-- Job Status Dropdown -->
+    <div class="p-field">
+      <label for="status">Application Status</label>
+      <select id="status" [(ngModel)]="job.status" name="status" required class="p-dropdown p-component">
+        <option *ngFor="let s of ['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received']" [value]="s">
+          {{ s }}
+        </option>
+      </select>
+    </div>
+  
+    <!-- Submit Button -->
+    <div class="p-field">
+      <button type="submit" pButton label="Save Job" class="p-button p-button-success"></button>
+    </div>
   </form>
+  
   

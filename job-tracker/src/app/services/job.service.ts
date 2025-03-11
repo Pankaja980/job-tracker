@@ -8,16 +8,17 @@ export interface JobApplication {
   id: number;
   title: string;
   company: string;
-  status: string;
   category?: string;
+  status: "Applied" | "Interview Scheduled" | "Rejected" | "Offer Received";
+  
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobService {
-  private apiUrl ="https://www.themuse.com/api/public/jobs?page=1" ; // Replace with your API URL
-
+  private apiUrl ="https://www.themuse.com/api/public/jobs" ; // Replace with your API URL
+  
   constructor(private http: HttpClient) {}
 
   // getJobs(): Observable<Job[]> {
@@ -40,7 +41,7 @@ export class JobService {
       //     status: 'Open' 
       //   }));
       getJobs(): Observable<Job[] > {
-        return this.http.get<{ results: any[] }>(this.apiUrl).pipe(
+        return this.http.get<{ results: any[] }>(`${this.apiUrl}?page=1`).pipe(
           map(response => {
             console.log('API Response:', response);
 
@@ -53,8 +54,8 @@ export class JobService {
             id: job.id??0,
             title: job.name?? 'No Title',  // Extracting name from title object
             company: job.company?.name?? 'Unknown', // Extracting name from company object
-            status: job.status??'Open'
-          }));
+            status: 'Applied'
+          })) as Job[];
       })
       // this.http.get(`${this.apiUrl}?page=1`).subscribe(response => console.log(response));
     );

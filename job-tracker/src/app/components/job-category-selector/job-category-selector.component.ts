@@ -1,4 +1,4 @@
-import { Component,EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component,EventEmitter, inject, OnInit, Output,Input } from '@angular/core';
 //import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 //import { JobCategoryService } from '../../services/job-category.service';
@@ -20,11 +20,12 @@ import { selectJobCategories, selectJobState } from '../../state/job-category/se
 })
 export class JobCategorySelectorComponent implements OnInit {
   jobCategories$!: Observable<string[] >;
-  selectedCategory: string = '';
+  //selectedCategory: string = '';
    constructor(private store: Store){}
 
+  @Input() selectedCategory: string = '';
 
-  @Output() categorySelected = new EventEmitter<string>();
+  @Output() selectedCategoryChange = new EventEmitter<string>();
 
   ngOnInit(): void {
     this.jobCategories$ = this.store.select(selectJobCategories);
@@ -33,7 +34,7 @@ export class JobCategorySelectorComponent implements OnInit {
 
   onCategorySelect(event: Event): void {
     const selectedCategory = (event.target as HTMLSelectElement).value;
-    this.categorySelected.emit(selectedCategory);
+    this.selectedCategoryChange.emit(selectedCategory);
   }
 }
   //private jobCategoryService = inject(JobCategoryService);

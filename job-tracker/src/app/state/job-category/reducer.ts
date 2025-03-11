@@ -1,10 +1,10 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 //import * as JobCategoryActions from './../job-category/actions';
 //import { JobCategory } from '../../models/job-category';
-import { loadJobCategories, loadJobCategoriesSuccess, loadJobCategoriesFailure } from './actions';
+import { loadJobCategories, loadJobCategoriesSuccess, loadJobCategoriesFailure, loadJobs } from './actions';
 import { JobApplication } from '../../models/job.model';
 import { Job } from '../../models/job';
-import {loadJobs} from './actions'
+import {loadJobsSuccess, addJob, updateJob,deleteJob} from './actions'
 // export interface JobCategoryState {
 //   categories: string[];
 //   loading: boolean;
@@ -28,12 +28,22 @@ export interface JobState {
 }
 
 const initialState: JobState = {
-  jobs: []  // ✅ Ensure state is initialized
+  jobs: [],  // ✅ Ensure state is initialized
 };
 
 export const jobReducer = createReducer(
   initialState,
-  on(loadJobs, (state, { jobs }) => ({ ...state, jobs }))
+  on(loadJobs, (state, { jobs }) => ({ ...state, jobs })),
+  on(loadJobsSuccess, (state, { jobs }) => ({ ...state, jobs })),
+  on(addJob, (state, { job }) => ({ ...state, jobs: [...state.jobs, job] })),
+  on(updateJob, (state, { job }) => ({
+    ...state,
+    jobs: state.jobs.map(j => (j.id === job.id ? job : j)),
+  })),
+  on(deleteJob, (state, { jobId }) => ({
+    ...state,
+    jobs: state.jobs.filter(job => job.id !== jobId),
+  }))
 );
 
 export interface JobCategoryState {

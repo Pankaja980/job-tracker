@@ -22,11 +22,13 @@
 
   <h2>Job Applications</h2>
 
+  <app-job-category-selector [(selectedCategory)]="selectedStatus"></app-job-category-selector>
+
 <div class="p-mb-4">
-  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="addNewJob()"></button>
+  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="openDialog()"></button>
 </div>
 
-<p-table [value]="jobs"  responsiveLayout="scroll">
+<p-table [value]="(filteredJobs$ |async ) ?? []"  responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
       <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
@@ -39,7 +41,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-job>
-    <tr *ngFor="let job of jobs">
+    <tr>
       <td *ngIf="job?.title">{{ job.title }}</td>
       <td *ngIf="job?.company">{{ job.company }}</td>
 
@@ -53,7 +55,7 @@
 </p-table>
 
 <p-dialog [(visible)]="displayDialog" header="Job Details" [modal]="true">
-  <div class="p-fluid">
+  <!-- <div class="p-fluid">
     <div class="p-field" *ngIf="selectedJob">
       <label for="title">Job Title</label>
       <input id="title" type="text"  pInputText  [(ngModel)]="selectedJob.title" />
@@ -70,9 +72,13 @@
   <p-footer>
     <button pButton type="button" label="Save" icon="pi pi-check" (click)="saveJob()"></button>
     <button pButton type="button" label="Cancel" icon="pi pi-times" (click)="displayDialog = false"></button>
-  </p-footer>
+  </p-footer> -->
+  <app-job-form *ngIf="selectedJob() !==null" 
+  [job]="selectedJob()" 
+  (save)="saveJob($event)" 
+  (close)="displayDialog=false"></app-job-form>
 </p-dialog>
 
-<p-chart type="pie" [data]="chartData" [options]="chartOptions" style="width: 100%; height: 300px;"></p-chart>
+<p-chart type="pie" [data]="chartData$" [options]="chartOptions" style="width: 100%; height: 300px;"></p-chart>
 
   
