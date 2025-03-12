@@ -25,7 +25,7 @@
   <app-job-category-selector [(selectedCategory)]="selectedStatus"></app-job-category-selector>
 
 <div class="p-mb-4">
-  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="openDialog()"></button>
+  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="openAddJobDialog()">Add Job</button>
 </div>
 
 <p-table [value]="(filteredJobs$ |async ) ?? []"  responsiveLayout="scroll">
@@ -47,14 +47,14 @@
 
       <td *ngIf="job?.category">{{ job.status }}</td>
       <td>
-        <button pButton type="button" label="Edit" icon="pi pi-pencil"  (click)="editJob(job)"></button>
-        <button pButton type="button" label="Delete" icon="pi pi-trash" (click)="deleteJob(job)"></button>
+        <button pButton type="button" label="Edit" icon="pi pi-pencil"  (click)="openEditJobDialog(job)">Edit</button>
+        <button pButton type="button" label="Delete" icon="pi pi-trash" (click)="deleteJob(job)">Delete</button>
       </td>
     </tr>
   </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="displayDialog" header="Job Details" [modal]="true">
+<p-dialog [(visible)]="displayAddDialog" header="Add Job" [modal]="true">
   <!-- <div class="p-fluid">
     <div class="p-field" *ngIf="selectedJob">
       <label for="title">Job Title</label>
@@ -73,12 +73,15 @@
     <button pButton type="button" label="Save" icon="pi pi-check" (click)="saveJob()"></button>
     <button pButton type="button" label="Cancel" icon="pi pi-times" (click)="displayDialog = false"></button>
   </p-footer> -->
-  <app-job-form *ngIf="selectedJob() !==null" 
-  [job]="selectedJob()" 
+  <app-job-form *ngIf="newJob()" 
+  [job]="newJob()" 
   (save)="saveJob($event)" 
-  (close)="displayDialog=false"></app-job-form>
+  (close)="closeDialog()"></app-job-form>
 </p-dialog>
 
-<p-chart type="pie" [data]="chartData$" [options]="chartOptions" style="width: 100%; height: 300px;"></p-chart>
+<p-dialog [(visible)]="displayEditDialog" header="Edit Job" [modal]="true">
+  <app-job-form *ngIf="selectedJob()" [job]="selectedJob()" (save)="saveJob($event)" (close)="closeDialog()"></app-job-form>
+</p-dialog>
+<p-chart type="pie" [data]="chartData" [options]="chartOptions" ></p-chart>
 
   

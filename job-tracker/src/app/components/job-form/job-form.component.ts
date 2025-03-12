@@ -21,7 +21,7 @@ import { Job } from '../../models/job';
 export class JobFormComponent {
   @Input() job!: Job | null;//JobApplication = { id: 0, title: '', company: '', status: '', category: '' };
   @Output() save = new EventEmitter<Job>();
-
+  @Output() close = new EventEmitter<void>();
   onCategorySelected(event: any) {
     if(this.job){
     this.job.category = event;
@@ -31,5 +31,8 @@ export class JobFormComponent {
     if (this.job){
     this.save.emit(this.job);
   }
+}
+onClose() {
+  this.close.emit();
 }
 }

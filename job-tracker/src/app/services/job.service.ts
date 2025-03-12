@@ -1,66 +1,95 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Job } from '../models/job';
-//import { JobApplication } from '../../models/job.model';
-export interface JobApplication {
-  id: number;
-  title: string;
-  company: string;
-  category?: string;
-  status: "Applied" | "Interview Scheduled" | "Rejected" | "Offer Received";
-  
-}
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { JobApplication } from '../models/job.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class JobService {
-  private apiUrl ="https://www.themuse.com/api/public/jobs" ; // Replace with your API URL
-  
+  // ✅ Base API URL without query parameters
+  private readonly baseUrl = 'https://www.themuse.com/api/public/jobs';
+  private readonly localStorageKey = 'savedJobApplications';
   constructor(private http: HttpClient) {}
 
-  // getJobs(): Observable<Job[]> {
-  //    return this.http.get<Job[] >(this.apiUrl, {
-  //     headers: { 'Content-Type': 'application/json' }
-  //   });
-    //.pipe(
-      // map(response => {
-      //   console.log('API Response:', response); // ✅ Debug API response
+  /**
+   * ✅ Fetch job categories dynamically
+   */
+  getJobCategories(page: number = 1): Observable<string[]> {
+    const url = `${this.baseUrl}?page=${page}`; // ✅ Dynamically append page
 
-      //   if (!Array.isArray(response.Job)) {
-      //     console.warn('Invalid API response format:', response);
-      //     return [];
-      //   }
+    console.log('Fetching job categories from:', url); // Debugging
 
-      //   return response.results.map(job => ({
-      //     id: job.id ?? 0, // Ensure ID is always a number
-      //     title: job.name ?? 'No title provided', // Handle missing title
-      //     company: job.company?.name ?? 'Unknown', // Handle missing company
-      //     status: 'Open' 
-      //   }));
-      getJobs(): Observable<Job[] > {
-        return this.http.get<{ results: any[] }>(`${this.apiUrl}?page=1`).pipe(
-          map(response => {
-            console.log('API Response:', response);
+    return this.http.get<any>(url).pipe(
+      map(response => {
+        if (!response.results || !Array.isArray(response.results)) {
+          console.error('Invalid API response format:', response);
+          return [];
+        }
 
-            if (!response.results || !Array.isArray(response.results)) {
-              console.error('Invalid API response format:', response);
-              return [];
-            }
+        const uniqueCategories = Array.from(
+          new Set(
+            response.results
+              .flatMap((job: any) =>
+                job.categories?.map((c: { name: string }) => c.name) || []
+              )
+          )
+        ) as string[];
 
-            return response.results.map(job => ({
-            id: job.id??0,
-            title: job.name?? 'No Title',  // Extracting name from title object
-            company: job.company?.name?? 'Unknown', // Extracting name from company object
-            status: 'Applied'
-          })) as Job[];
+        return uniqueCategories;
+      }),
+      catchError(error => {
+        console.error('Error fetching job categories:', error);
+        return throwError(() => new Error('Failed to fetch job categories'));
       })
-      // this.http.get(`${this.apiUrl}?page=1`).subscribe(response => console.log(response));
     );
-      
+  }
+
+  /**
+   * ✅ Fetch job listings
+   */
+
+  getJobs(page: number = 1): Observable<JobApplication[]> {
+    
+    const url = `${this.baseUrl}?page=${page}`; // ✅ Dynamically append page
+
+    console.log('Fetching jobs from:', url); // Debugging
+
+    return this.http.get<{ results: any[] }>(url).pipe(
+      map(response => {
+        if (!response.results || !Array.isArray(response.results)) {
+          console.error('Invalid API response format:', response);
+          return [];
+        }
+
+        return response.results.map(job => ({
+          id: job.id ?? 0,
+          title: job.name ?? 'No Title',
+          company: job.company?.name ?? 'Unknown',
+          category: job.categories?.[0]?.name ?? 'Unknown',
+          status: 'Applied',
+        })) as JobApplication[];
+      }),
+      catchError(error => {
+        console.error('Error fetching job listings:', error);
+        return throwError(() => new Error('Failed to fetch jobs'));
+      })
+    );
+  }
+
+  /**
+   * ✅ Fetch job applications (⚠️ Check why `/job-applications` was appended)
+   */
+  getJobApplications(): Observable<JobApplication[]> {
+    const url = `${this.baseUrl}`; // ✅ Removed incorrect `/job-applications`
+
+    console.log('Fetching job applications from:', url); // Debugging
+
+    return this.http.get<JobApplication[]>(url).pipe(
+      catchError(error => {
+        console.error('Error fetching job applications:', error);
+        return throwError(() => new Error('Failed to fetch job applications'));
+      })
+    );
   }
 }
-    
-  

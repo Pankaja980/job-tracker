@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { JobApplication } from '../../services/job.service';
+import { JobApplication } from '../../models/job.model';
 
 @Component({
   selector: 'app-job-item',

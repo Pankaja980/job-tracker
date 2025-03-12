@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { JobService } from '../../services/job-category.service';
+import { JobService } from '../../services/job.service';
 //import * as JobCategoryActions from './../job-category/actions';
 //import { loadJobCategories, loadJobCategoriesSuccess, loadJobCategoriesFailure } from './actions';
 import { loadJobs } from './actions';

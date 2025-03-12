@@ -7,6 +7,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { isDevMode } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { jobFeature, jobCategoryFeature } from './app/state/job-category/reducer';
 import { JobEffects } from './app/state/job-category/effects';
@@ -20,6 +21,7 @@ bootstrapApplication(AppComponent, {
     provideState(jobCategoryFeature),
     provideEffects(JobEffects), 
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideAnimations(),
     MessageService] 
 })
   .catch((err) => console.error(err));

@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit,WritableSignal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, map,startWith } from 'rxjs';
 import { Job } from '../../models/job';
@@ -15,7 +15,9 @@ import { ChartModule } from 'primeng/chart';
 import { JobService } from '../../services/job.service';
 import { ToastModule } from 'primeng/toast';
 import { JobApplication } from '../../models/job.model';
+import { Chart, registerables } from 'chart.js';
 
+Chart.register(...registerables);
 @Component({
   selector: 'app-job-list',
   standalone: true,
@@ -36,11 +38,14 @@ export class JobListComponent implements OnInit {
   private jobService=inject(JobService)
 
   filteredJobs:Job[]=[];
-  displayDialog: boolean = false;
+  displayAddDialog: boolean = false;
+  displayEditDialog: boolean = false;
   // Fetch jobs from NgRx store
   jobs$: Observable<Job[]> = this.store.select(selectJobs);
+  chartData: any;
   chartOptions: any;
-
+  newJob : WritableSignal <Job>=signal({ id: 0, title: '', company: '', status: 'Applied' });
+  jobApplications: WritableSignal<Job[]> = signal([]);
   // Signal for selected job (editing mode)
   selectedJob = signal<Job | null>(null);
   isEditing = computed(() => this.selectedJob() !== null);
@@ -48,20 +53,20 @@ export class JobListComponent implements OnInit {
   // Available application statuses
   statuses = ['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received'];
   selectedStatus = signal<string>('All'); // Default: Show all jobs
-  constructor() {
-    this.chartOptions = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Job Applications Summary',
-        },
-      },
-    };
-  }
+  constructor() {}
+    // this.chartOptions = {
+    //   responsive: true,
+    //   plugins: {
+    //     legend: {
+    //       position: 'top',
+    //     },
+    //     title: {
+    //       display: true,
+    //       text: 'Job Applications Summary',
+    //     },
+    //   },
+    // };
+  
   // Computed filtered jobs based on selected status
    filteredJobs$ : Observable<Job[]> = this.jobs$.pipe(//=this.jobs$.pipe(        //= computed(() =>
     map(jobs =>Array.isArray( jobs) 
@@ -94,25 +99,42 @@ export class JobListComponent implements OnInit {
   
 
   // Chart data for job summary
-  chartData$ : Observable<any> = this.jobSummary$.pipe(
-    map(jobSummary => ({
-    labels: this.statuses,
-    datasets: [
-      {
-        data: jobSummary.map(s => s.count),
-        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350'],
-      },
-    ],
-  }))
-);
+  // chartOptions$ : Observable<any> = this.jobSummary$.pipe(
+  //   map(jobSummary => ({
+  //   labels: this.statuses,
+  //   datasets: [
+  //     {
+  //       data: jobSummary.map(s => s.count),
+  //       backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350'],
+  //     },
+  //   ],
+  // }))
 
-openDialog() {
-  this.displayDialog = true;
+//);
+updateChart(): void {
+  this.chartData = {
+    labels: Object.keys(this.jobSummary$),
+    datasets: [{
+      data: Object.values(this.jobSummary$),
+      backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350']
+    }]
+  };
+
+  this.chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false
+  };
 }
+
+
+// openDialog() {
+//   this.displayDialog = true;
+// }
 
 // Function to close the dialog
 closeDialog() {
-  this.displayDialog = false;
+  this.displayAddDialog = false;
+  this.displayEditDialog = false;
 }
 
   ngOnInit() {
@@ -160,19 +182,47 @@ closeDialog() {
   });
   
 }
+openAddJobDialog() {
+  console.log("Opening Add Job Dialog...");
+  this.newJob.set({ id: 0, title: '', company: '', status: 'Applied' }); // Reset form
+  this.displayAddDialog = true;
+  console.log("displayDialog:", this.displayAddDialog);
+}
+openEditJobDialog(job: Job) {
+  this.selectedJob.set({ ...job }); // Copy job details
+  this.displayEditDialog = true;
+}
+
+
+// saveJob() {
+//   if (!this.newJob().title || !this.newJob().company) {
+//     alert("Title and company are required.");
+//     return;
+//   }
+
+//   const jobToAdd = { ...this.newJob(), id: Date.now() }; // Unique ID based on timestamp
+//   this.store.dispatch(addJob({ job: jobToAdd }));
+//   this.showToast("Job added successfully!");
+//   this.displayDialog = false;
+// }
+
+// closeDialog() {
+//   this.displayDialog = false;
+// }
 
 
   // Open job form for editing
-  editJob(job: Job) {
-    this.selectedJob.set(job);
-    this.displayDialog=true;
-  }
+  // editJob(job: Job) {
+  //   this.selectedJob.set(job);
+  //   this.displayDialog=true;
+  // }
 
   // Close job form
-  closeJobForm() {
-    this.selectedJob.set(null);
-    this.displayDialog=false;
-  }
+  // closeJobForm() {
+  //   this.selectedJob.set(null);
+  //   this.displayAddDialog=false;
+  //   this.displayEditDialog=false;
+  // }
 
   // Show success notification
   showToast(message: string) {
@@ -189,22 +239,57 @@ closeDialog() {
     if (confirm(`Are you sure you want to delete ${job.title}?`)) {
       this.store.dispatch(deleteJob({ jobId: job.id }));
       this.showToast('Job deleted successfully');
+      this.updateChart();
     }
   }
-  saveJob(job: Job) {
-    if (this.selectedJob()) {
-      // Update the existing job
-      this.store.dispatch(updateJob({ job })); // Assuming `updateJob` action exists
-      this.showToast('Job updated successfully!');
-    } else {
-      // Add new job
-      this.store.dispatch(addJob({ job })); // Assuming `addJob` action exists
-      this.showToast('Job added successfully!');
-    }
+  addJob(job: Job) {
+    this.store.dispatch(addJob({ job }));
+    this.showToast('Job added successfully!');
+  }
+  generateUniqueId(): number {
+    return this.jobApplications().length > 0 
+      ? Math.max(...this.jobApplications().map(job => job.id)) + 1 
+      : 1;
+  }
   
-    // Close the job form
-    this.closeJobForm();
+  // saveJob(job: Job) {
+  //   if (this.selectedJob()) {
+  //     // Update the existing job
+  //     this.store.dispatch(updateJob({ job })); // Assuming `updateJob` action exists
+  //     this.showToast('Job updated successfully!');
+  //   } else {
+  //     // Add new job
+  //     // this.store.dispatch(addJob({ job })); // Assuming `addJob` action exists
+  //     // this.showToast('Job added successfully!');
+  //     const newJobToAdd: Job = { ...this.newJob(), id: Date.now() };
+  //     this.addJob(newJobToAdd);
+  //   }
+  //   this.displayAddDialog = false;
+  //   this.displayEditDialog = false;
+  //   this.updateChart();
+  //   // Close the job form
+  //   //this.closeJobForm();
+  // }
+  saveJob(job: Job) {
+    if (job.id === 0) {
+      // ✅ Assign a unique ID for the new job
+      job.id = this.generateUniqueId();
+      this.jobApplications.set([...this.jobApplications(), job]); 
+    } else {
+      // ✅ Update the existing job
+      this.jobApplications.set(this.jobApplications().map(j => 
+        j.id === job.id ? job : j
+      ));
+    }
+    this.displayAddDialog = false;
+    this.displayEditDialog = false;
+     this.updateChart();
+    // ✅ Close the dialog after saving
+   // this.displayDialog = false;
   }
+  
+
+  
   
   
 }
