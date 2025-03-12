@@ -1,8 +1,13 @@
 <div class="container">
+  <nav class="navbar">
+    <a routerLink="/jobs" routerLinkActive="active">Job List</a>
+    <a routerLink="/add-job" routerLinkActive="active">Add Job</a>
+  </nav>
   <header>
     <h1>{{ title }}</h1>
   </header>
 
   <!-- Job List Component -->
-  <app-job-list></app-job-list>
+  <!-- <app-job-list></app-job-list> -->
+  <router-outlet></router-outlet>
 </div>

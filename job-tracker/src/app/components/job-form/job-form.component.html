@@ -21,13 +21,15 @@
     <!-- Job Title -->
     <div class="p-field">
       <label for="title">Job Title</label>
-      <input id="title" type="text" [(ngModel)]="job.title" name="title" required class="p-inputtext p-component" />
+      <input id="title" type="text" [(ngModel)]="job.title" name="title" required class="p-inputtext p-component" 
+      (input)="onInputChange('jobTitle', job.title)"/>
     </div>
   
     <!-- Company Name -->
     <div class="p-field">
       <label for="company">Company</label>
-      <input id="company" type="text" [(ngModel)]="job.company" name="company" required class="p-inputtext p-component" />
+      <input id="company" type="text" [(ngModel)]="job.company" name="company" required class="p-inputtext p-component" 
+      (input)="onInputChange('jobCompany', job.company)"/>
     </div>
   
     <!-- Job Category Selector -->
@@ -39,7 +41,8 @@
     <!-- Job Status Dropdown -->
     <div class="p-field">
       <label for="status">Application Status</label>
-      <select id="status" [(ngModel)]="job.status" name="status" required class="p-dropdown p-component">
+      <select id="status" [(ngModel)]="job.status" name="status" required class="p-dropdown p-component"
+      (change)="onInputChange('jobStatus', job.status)">
         <option *ngFor="let s of ['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received']" [value]="s">
           {{ s }}
         </option>

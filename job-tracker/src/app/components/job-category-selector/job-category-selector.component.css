@@ -5,14 +5,12 @@ label {
     display: block;
     margin-bottom: 5px;
   }
-  
-  select {
+  input, select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
-    background: white;
-    cursor: pointer;
+    transition: border-color 0.3s ease-in-out;
   }
   

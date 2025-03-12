@@ -22,7 +22,7 @@
 
   <h2>Job Applications</h2>
 
-  <app-job-category-selector [(selectedCategory)]="selectedStatus"></app-job-category-selector>
+  <!--<app-job-category-selector [(selectedCategory)]="selectedStatus"></app-job-category-selector>-->
 
 <div class="p-mb-4">
   <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="openAddJobDialog()">Add Job</button>
@@ -34,7 +34,8 @@
       <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
 
       <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
-      
+      <th>Category</th>
+
       <th>Status</th>
 
       <th>Actions</th>
@@ -45,7 +46,8 @@
       <td *ngIf="job?.title">{{ job.title }}</td>
       <td *ngIf="job?.company">{{ job.company }}</td>
 
-      <td *ngIf="job?.category">{{ job.status }}</td>
+      <td *ngIf="job?.category">{{ job.category }}</td>
+      <td *ngIf="job?.status">{{ job.status }}</td>
       <td>
         <button pButton type="button" label="Edit" icon="pi pi-pencil"  (click)="openEditJobDialog(job)">Edit</button>
         <button pButton type="button" label="Delete" icon="pi pi-trash" (click)="deleteJob(job)">Delete</button>
