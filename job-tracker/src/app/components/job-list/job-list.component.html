@@ -1,89 +1,80 @@
-<!-- 
-<div *ngFor="let job of jobApplications">
-    <app-job-item [job]="job"></app-job-item>  ✅ Using JobItemComponent -->
-  <!-- </div> -->
-  <!-- <h2>Job Applications</h2>
+<div class="job-list-container">
+  <!-- 🔹 Page Title -->
+  <h2>Job Tracker</h2>
 
-  <!-- <button (click)="addNewJob()">Add New Job</button> -->
-  
-  <!-- Ensure the form is being used -->
-  <!-- <div *ngIf="selectedJob">
-    <app-job-form [job]="selectedJob" (save)="saveJob($event)"></app-job-form>
-  </div>
-  
-  <ul>
-    <li *ngFor="let job of jobApplications">
-      <app-job-item [job]="job"></app-job-item> <!-- ✅ Pass job data -->
-      <!-- <button (click)="editJob(job)">Edit</button>
-    </li>
-  </ul> --> 
- 
+  <!-- 🔹 Job Category Selector (Filter by Level) -->
+  <app-job-category-selector 
+    (selectedCategoryChange)="onLevelChange($event)">
+  </app-job-category-selector>
+
+  <!-- 🔹 Add Job Button -->
+  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="addJob()"></button>
+
+  <!-- 🔹 Jobs Table -->
+  <p-table #dt 
+    [value]="(filteredJobs$ | async) || []" 
+    [paginator]="true" 
+    [rows]="10" 
+    responsiveLayout="scroll" 
+    [stripedRows]="true" 
+  >
+    
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Job Title</th>
+        <th>Company</th>
+        <th>Level</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="body" let-job>
+      <tr>
+        <td>{{ job.name }}</td>
+        <td>{{ job.company.name }}</td>
+        <td>{{ getJobLevels(job) }}</td>
+        <td>
+          <!-- <p-dropdown 
+            [options]="jobStatusOptions"
+            [(ngModel)]="job.status"
+            (onChange)="onStatusChange(job, $event.value)">
+          </p-dropdown> -->
+          <!-- If editing or adding, show the dropdown -->
+          <p-dropdown 
+          *ngIf="isEditMode && selectedJob?.id === job.id" 
+          formControlName="jobStatus" 
+          [options]="jobStatusOptions" 
+          optionLabel="label">
+          </p-dropdown>
+
+<!-- Otherwise, show status as plain text -->
+          <span *ngIf="!isEditMode || selectedJob?.id !== job.id">
+          {{ job.status || 'Applied' }}
+          </span>
+
+        </td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-sm p-button-warning" (click)="editJob(job)">Edit</button>
+          <button pButton icon="pi pi-trash" class="p-button-sm p-button-danger" (click)="confirmDelete(job)">Delete</button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- 🔹 Add/Edit Job Dialog -->
+  <p-dialog [(visible)]="displayDialog" [modal]="true" header="{{ selectedJob ? 'Edit Job' : 'Add Job' }}">
+    <app-job-form [job]="selectedJob" (jobSaved)="onJobSave($event)"></app-job-form>
+  </p-dialog>
+
+  <!-- 🔹 Confirm Delete Dialog -->
+  <p-confirmDialog header="Delete Job" icon="pi pi-exclamation-triangle" acceptLabel="Delete" rejectLabel="Cancel"></p-confirmDialog>
+
+  <!-- 🔹 Toast Messages -->
   <p-toast></p-toast>
 
-  <h2>Job Applications</h2>
-
-  <!--<app-job-category-selector [(selectedCategory)]="selectedStatus"></app-job-category-selector>-->
-
-<div class="p-mb-4">
-  <button pButton type="button" label="Add Job" icon="pi pi-plus" class="p-button-success" (click)="openAddJobDialog()">Add Job</button>
-</div>
-
-<p-table [value]="(filteredJobs$ |async ) ?? []"  responsiveLayout="scroll">
-  <ng-template pTemplate="header">
-    <tr>
-      <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
-
-      <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
-      <th>Category</th>
-
-      <th>Status</th>
-
-      <th>Actions</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-job>
-    <tr>
-      <td *ngIf="job?.title">{{ job.title }}</td>
-      <td *ngIf="job?.company">{{ job.company }}</td>
-
-      <td *ngIf="job?.category">{{ job.category }}</td>
-      <td *ngIf="job?.status">{{ job.status }}</td>
-      <td>
-        <button pButton type="button" label="Edit" icon="pi pi-pencil"  (click)="openEditJobDialog(job)">Edit</button>
-        <button pButton type="button" label="Delete" icon="pi pi-trash" (click)="deleteJob(job)">Delete</button>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
-
-<p-dialog [(visible)]="displayAddDialog" header="Add Job" [modal]="true">
-  <!-- <div class="p-fluid">
-    <div class="p-field" *ngIf="selectedJob">
-      <label for="title">Job Title</label>
-      <input id="title" type="text"  pInputText  [(ngModel)]="selectedJob.title" />
-    </div>
-    <div class="p-field" *ngIf="selectedJob">
-      <label for="company">Company</label>
-      <input id="company" type="text" pInputText [(ngModel)]="selectedJob!.company" />
-    </div>
-    <div class="p-field" *ngIf="selectedJob">
-      <label for="status">Status</label>
-      <p-dropdown id="status" [(ngModel)]="selectedJob!.status" [options]="['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received']"></p-dropdown>
-    </div>
+  <!-- 🔹 Job Levels Chart (At the Bottom) -->
+  <div class="chart-container">
+    <p-chart type="bar" [data]="levelChartData" [options]="levelChartOptions"></p-chart>
   </div>
-  <p-footer>
-    <button pButton type="button" label="Save" icon="pi pi-check" (click)="saveJob()"></button>
-    <button pButton type="button" label="Cancel" icon="pi pi-times" (click)="displayDialog = false"></button>
-  </p-footer> -->
-  <app-job-form *ngIf="newJob()" 
-  [job]="newJob()" 
-  (save)="saveJob($event)" 
-  (close)="closeDialog()"></app-job-form>
-</p-dialog>
-
-<p-dialog [(visible)]="displayEditDialog" header="Edit Job" [modal]="true">
-  <app-job-form *ngIf="selectedJob()" [job]="selectedJob()" (save)="saveJob($event)" (close)="closeDialog()"></app-job-form>
-</p-dialog>
-<p-chart type="pie" [data]="chartData" [options]="chartOptions" ></p-chart>
-
-  
+</div>

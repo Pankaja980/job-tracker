@@ -11,17 +11,17 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 
-import { jobFeature, jobCategoryFeature } from './app/state/job-category/reducer';
+//import { jobFeature, jobCategoryFeature } from './app/state/job-category/reducer';
 import { JobEffects } from './app/state/job-category/effects';
 import { jobReducer } from './app/state/job-category/reducer';  // ✅ Ensure the correct path
 
 
 bootstrapApplication(AppComponent, {
   providers: [provideHttpClient(), 
-    provideStore({ jobState: jobReducer }),
-    provideState(jobFeature), 
-    provideState(jobCategoryFeature),
-    provideEffects(JobEffects), 
+    provideStore({ job: jobReducer }),
+    //provideState(jobFeature), 
+    //provideState(jobCategoryFeature),
+    provideEffects([JobEffects]), 
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideAnimations(),
     MessageService,

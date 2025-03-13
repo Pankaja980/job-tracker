@@ -1,59 +1,45 @@
-<!-- <form (ngSubmit)="onSubmit()">
-    <label>Job Title:</label>
-    <input type="text" [(ngModel)]="job.title" name="title" required />
-  
-    <label>Company:</label>
-    <input type="text" [(ngModel)]="job.company" name="company" required />
-  
-    <label>Status:</label>
-    <select [(ngModel)]="job.status" name="status">
-      <option value="Applied">Applied</option>
-      <option value="Interview">Interview</option>
-      <option value="Rejected">Rejected</option>
-      <option value="Accepted">Accepted</option>
-    </select>
+<form [formGroup]="jobForm" (ngSubmit)="saveJob()">
+  <div class="p-fluid">
     
-    <label>Category:</label>
-    <app-job-category-selector (categorySelected)="onCategorySelected($event)"></app-job-category-selector>
-    <button type="submit">Save</button>
-  </form> -->
-  <form *ngIf="job" (ngSubmit)="onSubmit()">
-    <!-- Job Title -->
+    <!-- 🔹 Job Title -->
     <div class="p-field">
-      <label for="title">Job Title</label>
-      <input id="title" type="text" [(ngModel)]="job.title" name="title" required class="p-inputtext p-component" 
-      (input)="onInputChange('jobTitle', job.title)"/>
+      <label for="jobTitle">Job Title</label>
+      <input id="jobTitle" type="text" pInputText formControlName="name" placeholder="Enter job title" />
     </div>
-  
-    <!-- Company Name -->
+
+    <!-- 🔹 Company Name -->
     <div class="p-field">
       <label for="company">Company</label>
-      <input id="company" type="text" [(ngModel)]="job.company" name="company" required class="p-inputtext p-component" 
-      (input)="onInputChange('jobCompany', job.company)"/>
+      <input id="company" type="text" pInputText formControlName="company" placeholder="Enter company name" />
     </div>
-  
-    <!-- Job Category Selector -->
+
+    <!-- 🔹 Job Level Dropdown -->
     <div class="p-field">
-      <label for="category">Category</label>
-      <app-job-category-selector (categorySelected)="onCategorySelected($event)"></app-job-category-selector>
-    </div>
-  
-    <!-- Job Status Dropdown -->
-    <div class="p-field">
-      <label for="status">Application Status</label>
-      <select id="status" [(ngModel)]="job.status" name="status" required class="p-dropdown p-component"
-      (change)="onInputChange('jobStatus', job.status)">
-        <option *ngFor="let s of ['Applied', 'Interview Scheduled', 'Rejected', 'Offer Received']" [value]="s">
-          {{ s }}
+      <label for="jobLevel">Job Level</label>
+      <div class="dropdown-container"> 
+        <select id="jobLevel"[(ngModel)]="selectedJobLevel">
+        <option value=" "></option>
+        <!-- <option *ngFor="let level of jobLevels" [value]="level">{{ level }}</option> -->
+        <!-- placeholder="Select Job Level" -->
+        <option *ngFor="let level of ['Entry Level', 'Mid Level', 'Senior Level']" [value]="level">
+          {{ level }}
         </option>
-      </select>
+        </select>
+      </div>
     </div>
-  
-    <!-- Submit Button -->
+
+    <!-- 🔹 Job Status Dropdown -->
     <div class="p-field">
-      <button type="submit" pButton label="Save Job" class="p-button p-button-success">Save</button>
-      <!-- <button pButton type="button" label="Cancel" icon="pi pi-times" class="p-button-secondary" (click)="onClose()"></button> -->
+      <label for="jobStatus"><strong>Job Status</strong></label>
+  <div class="dropdown-container">
+    <select id="jobStatus" [(ngModel)]="selectedJobStatus">
+      <option value=""></option>
+      <option *ngFor="let status of jobStatuses" [value]="status">{{ status }}</option>
+    </select>
+  </div>
     </div>
-  </form>
-  
-  
+<br>
+    <!-- 🔹 Save Button -->
+    <button pButton type="submit" label="Save Job" class="p-button-success">Save</button>
+  </div>
+</form>

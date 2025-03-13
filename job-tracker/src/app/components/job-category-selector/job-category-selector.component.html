@@ -1,20 +1,30 @@
-<!-- <label for="job-category">Category:</label>
-<select id="job-category" [value]="selectedCategory" (change)="onCategorySelect($event)">
-  <!-- <option value="">Select Category</option> -->
-  <!-- <option *ngFor="let category of jobCategories$ | async" [value]="category">
-    {{ category }}
-  </option>
-</select> --> 
-<label for="job-category">Category:</label>
-<input
-  id="job-category"
-  type="text"
-  [value]="selectedCategory"
-  (input)="onCategoryInput($event)"
-  placeholder="Enter job category..."
-  list="category-list"
-/>
+<!-- <div class="job-category-selector">
+  <label for="jobLevel -{{job.id}}">Level:</label>
+  <p-dropdown 
+    id="jobLevel" 
+    [options]="(jobLevels$ | async) || []" 
+    [(ngModel)]="selectedCategory" 
+    (onChange)="onCategoryChange($event.value)" 
+    placeholder="Choose a level">
+  </p-dropdown>
+</div> -->
+<label for="levelSelect"><strong>Level:</strong></label>
+<div class="dropdown-container">
+  <select id="levelSelect" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)">
+    <option value="">All</option>
+    <option *ngFor="let level of jobLevels$ | async" [value]="level.value">
+      {{ level.label }}
+    </option>
+  </select>
+  <!-- <button class="dropdown-button" (click)="toggleDropdown()">▼</button> -->
+</div>
 
-<datalist id="category-list">
-  <option *ngFor="let category of filteredCategories" [value]="category"></option>
-</datalist>
+
+<!-- Display filtered jobs
+<ul *ngIf="filteredJobs$ | async as jobs">
+  <li *ngFor="let job of jobs">
+    <strong>{{ job.name }}</strong> - {{ job.company.name }}  
+    <br> <em>Level:</em> {{ job.levels[0].name }}  
+    <br> <em>Status:</em> {{ job.status || 'Not Available' }}  
+  </li>
+</ul> -->
