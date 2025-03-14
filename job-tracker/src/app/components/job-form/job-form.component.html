@@ -1,23 +1,25 @@
-<form [formGroup]="jobForm" (ngSubmit)="saveJob()">
+<!-- <p-dialog [(visible)]="displayDialog" [modal]="true" header="Add/Edit Job"> -->
+
+<form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
   <div class="p-fluid">
     
     <!-- 🔹 Job Title -->
     <div class="p-field">
       <label for="jobTitle">Job Title</label>
-      <input id="jobTitle" type="text" pInputText formControlName="name" placeholder="Enter job title" />
+      <input id="jobTitle" type="text"  placeholder="Enter job title" formControlName="title" />
     </div>
 
     <!-- 🔹 Company Name -->
     <div class="p-field">
       <label for="company">Company</label>
-      <input id="company" type="text" pInputText formControlName="company" placeholder="Enter company name" />
+      <input id="company" type="text"  placeholder="Enter company name" formControlName="company"  />
     </div>
 
     <!-- 🔹 Job Level Dropdown -->
     <div class="p-field">
       <label for="jobLevel">Job Level</label>
-      <div class="dropdown-container"> 
-        <select id="jobLevel"[(ngModel)]="selectedJobLevel">
+      <div class="dropdown-container" > 
+        <select id="jobLevel" formControlName="level">
         <option value=" "></option>
         <!-- <option *ngFor="let level of jobLevels" [value]="level">{{ level }}</option> -->
         <!-- placeholder="Select Job Level" -->
@@ -32,14 +34,16 @@
     <div class="p-field">
       <label for="jobStatus"><strong>Job Status</strong></label>
   <div class="dropdown-container">
-    <select id="jobStatus" [(ngModel)]="selectedJobStatus">
-      <option value=""></option>
+    <select id="jobStatus" formControlName="status" >
+      <option value=""  ></option>
       <option *ngFor="let status of jobStatuses" [value]="status">{{ status }}</option>
     </select>
   </div>
     </div>
 <br>
     <!-- 🔹 Save Button -->
-    <button pButton type="submit" label="Save Job" class="p-button-success">Save</button>
+    <button pButton type="submit" label="Save"  class="p-button-success"></button>
+    <button pButton type="button" label="Cancel" (click)="onCancel()" class="p-button-secondary"></button>
   </div>
 </form>
+<!-- </p-dialog> -->

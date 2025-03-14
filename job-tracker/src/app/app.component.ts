@@ -7,11 +7,11 @@ import { provideEffects } from '@ngrx/effects';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+//import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true, // ✅ Standalone component
-  imports: [CommonModule, JobListComponent,RouterModule,
+  imports: [CommonModule, JobListComponent,
     ToastModule
   ], // ✅ Import JobListComponent
   templateUrl: './app.component.html',

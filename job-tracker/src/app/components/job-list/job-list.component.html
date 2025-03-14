@@ -50,7 +50,7 @@
 
 <!-- Otherwise, show status as plain text -->
           <span *ngIf="!isEditMode || selectedJob?.id !== job.id">
-          {{ job.status || 'Applied' }}
+          {{ job.status ||'Applied'}}
           </span>
 
         </td>
@@ -64,7 +64,7 @@
 
   <!-- 🔹 Add/Edit Job Dialog -->
   <p-dialog [(visible)]="displayDialog" [modal]="true" header="{{ selectedJob ? 'Edit Job' : 'Add Job' }}">
-    <app-job-form [job]="selectedJob" (jobSaved)="onJobSave($event)"></app-job-form>
+    <app-job-form [job]="selectedJob" (saveJob)="onJobSave($event)" (cancel)="onCancel()"></app-job-form>
   </p-dialog>
 
   <!-- 🔹 Confirm Delete Dialog -->

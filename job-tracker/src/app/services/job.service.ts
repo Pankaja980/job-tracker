@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable ,map} from 'rxjs';
+import { Observable ,map,of} from 'rxjs';
 import { Job } from '../models/job';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { Job } from '../models/job';
 })
 export class JobService {
   private readonly baseUrl = 'https://www.themuse.com/api/public/jobs';
+  private readonly localStorageKey = 'jobs';
 
   constructor(private http: HttpClient) {}
 
@@ -24,5 +25,33 @@ export class JobService {
     return this.http.get<{ results: Job[] }>(`${this.baseUrl}?page=1`).pipe(
       map(response => response.results) // Extract jobs from API response
     );
+  }
+  // getJobs(): Observable<Job[]> {
+  //   const savedJobs = localStorage.getItem(this.localStorageKey);
+  //   const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+  //   return of(jobs);
+  // }
+
+  addJob(job: Job): Observable<Job> {
+    const savedJobs = localStorage.getItem(this.localStorageKey);
+    const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+    jobs.push(job);
+    localStorage.setItem(this.localStorageKey, JSON.stringify(jobs));
+    return of(job);
+  }
+  updateJob(job: Job): Observable<Job> {
+    const savedJobs = localStorage.getItem(this.localStorageKey);
+    const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+    const updatedJobs = jobs.map((j: Job) => (j.id === job.id ? job : j));
+    localStorage.setItem(this.localStorageKey, JSON.stringify(updatedJobs));
+    return of(job);
+  }
+
+  deleteJob(id: number): Observable<void> {
+    const savedJobs = localStorage.getItem(this.localStorageKey);
+    const jobs = savedJobs ? JSON.parse(savedJobs) : [];
+    const updatedJobs = jobs.filter((job: Job) => job.id !== id);
+    localStorage.setItem(this.localStorageKey, JSON.stringify(updatedJobs));
+    return of(undefined);
   }
 }
