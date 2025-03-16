@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    background-image: url('assets/jobtrack.png');  /* Set doodle background */
+    background-size: cover;  /* Adjust size */
+    background-position: center;  /* Center the image */
+    background-repeat: repeat;  /* Repeat across the screen */
+    background-attachment: scroll;  /* Make it fixed while scrolling */
+    background-size: 100px 150px;
+}
+

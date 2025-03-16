@@ -1,74 +1,226 @@
-/* Styling for the Job List container */
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  /* Error message styling */
-  .error {
-    color: red;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  
-  /* Button styling */
-  button {
-    background-color: #007bff;
+/* 📌 Main Container Styling */
+/* .job-tracker-container{
+      background-image:url('https://files.oaiusercontent.com/file-AsXzrSBdbg8Z3rPZbhax9m?se=2025-03-15T17%3A11%3A38Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D15d1cf90-2fd7-4814-9cbf-c05676480b95.webp&sig=1U6kp7CKcMEfZPvSIO7ARLFB5I/RId0Xt/Ub9PgN7O8%3D');
+
+} */
+.job-tracker-container {
+  background-color: white;  /* Keep container readable */
+  border-radius: 20px;  /* Smooth rounded edges */
+  padding: 25px;  /* Space inside the container */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  max-width: 90%; /* Prevent it from stretching too much */
+  margin: 20px auto;  /* Centering */
+  position: relative; /* Ensures stacking properly */
+  z-index: 10; /* Keeps it above background */
+}
+
+.job-list-container {
+  width: 90%;
+  margin: auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* 📌 Table Styling */
+.job-table {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+
+  th {
+    background: #65cece;
     color: white;
     font-weight: bold;
-    border: none;
-    padding: 8px 12px;
-    margin: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    
-    min-width: 80px;
-  text-align: center;
+    padding: 14px;
+    text-align: left;
+    border-radius: 5px 5px 0 0;
   }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Styling for the job application list */
-  ul {
-    list-style: none;
-    padding: 0;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  /* Individual job items */
-  li {
-    background: #f9f9f9;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  /* Styling for job title and company */
-  li strong {
+
+  td {
+    padding: 5px;
     font-size: 16px;
-    color: #333;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
   }
-  
-  /* Edit button */
-  li button {
-    background-color: #28a745;
+
+  .job-row:nth-child(even) {
+    background-color: #f8f9fa;
   }
-  
-  li button:hover {
-    background-color: #218838;
+
+  .job-row:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s;
+  }
+}
+
+/* 📌 Job Title Column - Larger Width */
+th:nth-child(1),
+td:nth-child(1) {
+  width: 40%;
+}
+
+/* 📌 Company Column */
+th:nth-child(2),
+td:nth-child(2) {
+  width: 20%;
+}
+
+/* 📌 Level Column */
+th:nth-child(3),
+td:nth-child(3) {
+  width: 15%;
+}
+
+/* 📌 Status Column */
+th:nth-child(4),
+td:nth-child(4) {
+  width: 15%;
+}
+
+/* 📌 Actions Column */
+th:nth-child(5),
+td:nth-child(5) {
+  width: 10%;
+}
+
+/* 📌 Actions (Edit & Delete Buttons) */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.job-actions {
+  display: flex;
+  justify-content: space-between; /* Push elements to opposite sides */
+  align-items: center;
+  width: 100%; /* Ensure it takes full width */
+  padding: 10px; /* Optional padding */
+}
+.add-job-btn {
+  background-color: #84d970 !important;
+  color: black !important;
+  border-radius: 8px;
+  width: 100px; /* Ensures square shape */
+  height: 50px; /* Ensures square shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px; /* Gives a rounded square look */
+  font-size: 16px;
+  font-weight: bold;
+  transition: transform 0.2s ease-in-out;
+}
+
+.search-bar {
+  display: inline-block;
+  width: 300px; /* Adjust width as needed */
+  height: 40px; /* Adjust height as needed */
+  padding: 10px;
+  margin-left: auto; /* Pushes the search bar to the right */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  display: block; /* Ensures the search bar is treated as a block element */
+  /*float: right; /* Aligns the search bar to the right */
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Space below the header */
+}
+/* 📌 Buttons */
+.edit-btn {
+  background-color: #e1cdeb !important;
+  color:black!important;
+  border-radius: 8px;
+  width: 60px; /* Ensures square shape */
+  height: 50px; /* Ensures square shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px; /* Gives a rounded square look */
+  font-size: 16px;
+  font-weight: bold;
+  transition: transform 0.2s ease-in-out;
+}
+
+.delete-btn {
+  background-color: #db6581 !important;
+  color: white !important;
+  border-radius: 8px;
+  width: 60px; /* Ensures square shape */
+  height: 50px; /* Ensures square shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px; /* Gives a rounded square look */
+  font-size: 16px;
+  font-weight: bold;
+  transition: transform 0.2s ease-in-out;
+}
+
+.edit-btn:hover{
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+  background-color: #61c5b4 !important;
+}
+.delete-btn:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+  background-color: red !important;
+}
+
+/* 📌 Pagination Styling */
+.p-paginator {
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #0056b3;
+  font-weight: bold;
+}
+
+/* 📌 Responsive Adjustments */
+@media (max-width: 768px) {
+  .job-list-container {
+    width: 100%;
+    padding: 15px;
+  }
+
+  th, td {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 5px;
   }
   .chart-container {
-    width: 100%;  /* Ensure full width */
-    height: 300px; /* Set a proper height */
+    position: absolute;
+   /* top: 20px; /* Adjust to fit */
+   /* right: 20px; /* Move to the right */
+    width: 600px; /*Set a fixed width*/
+    height: 200px; /* Set a fixed height */
+    background: white; /* Optional: Background for better visibility */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
   }
   
-  
+}

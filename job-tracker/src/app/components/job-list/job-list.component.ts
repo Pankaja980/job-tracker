@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -15,6 +15,9 @@ import { JobFormComponent } from '../job-form/job-form.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
+// import { ConfirmDialogModule } from 'primeng/confirmdialog';
+// import { ConfirmationService } from 'primeng/api';
+
 
 import {
   FormsModule,
@@ -92,12 +95,37 @@ export class JobListComponent implements OnInit {
   //       }
   //     }
   //   }
-  // };
+  searchText: string = '';
+
+  onSearch(event: any): void {
+    this.searchText = event.target.value.toLowerCase();
+    this.filterJobs();
+    this.filteredJobs$.subscribe(filteredJobs => {
+      if (filteredJobs.length === 0) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'No Results',
+        detail: 'No jobs found matching your search criteria',
+      });
+      }
+    });
+  }
+  filterJobs(): void {
+    this.filteredJobs$ = this.jobs$.pipe(
+      map((jobs) =>
+        jobs.filter((job) =>
+          job.name.toLowerCase().includes(this.searchText.toLowerCase())
+        )
+      )
+    );
+  }
+
 
   constructor(
     private store: Store,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private cdr: ChangeDetectorRef
   ) {
     this.jobs$ = this.store.select(selectJobs);
     this.jobForm = new FormGroup({
@@ -112,7 +140,7 @@ export class JobListComponent implements OnInit {
     this.store.dispatch(JobActions.loadJobs());
 
     this.jobs$.subscribe((jobs) => this.updateChart(jobs)); // Updates chart only when job list changes
-
+    this.filteredJobs$ = this.jobs$;
     this.applyFilters();
   }
 
@@ -131,6 +159,11 @@ export class JobListComponent implements OnInit {
       })
     );
   }
+  // filterJobs() {
+  //   this.filteredJobs$ = this.jobs$.filter(job =>
+  //     job.title.toLowerCase().includes(this.searchText.toLowerCase())
+  //   );
+  // }
 
   updateChart(jobs: Job[]): void {
     const levelCounts: { [key: string]: number } = {};
@@ -172,8 +205,9 @@ export class JobListComponent implements OnInit {
   //   this.store.dispatch(JobActions.updateJob({ job: { ...job, status } }));
   //   this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Job status updated successfully' });
   // }
-  onStatusChange(job: Job, status: string): void {
-    const updatedJob = { ...job, status }; // Create a new job object
+  onStatusChange(job: Job, event: any): void {
+    const newStatus = event.value;
+    const updatedJob = { ...job, status:newStatus }; // Create a new job object
     this.store.dispatch(JobActions.updateJob({ job: updatedJob })); // Dispatch updated job
     this.messageService.add({
       severity: 'success',
@@ -226,8 +260,15 @@ export class JobListComponent implements OnInit {
   confirmDelete(job: Job): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete "${job.name}"?`,
+      header: 'Delete Job',
+      icon: 'pi pi-exclamation-triangle', // Warning symbol
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger', // Red delete button
+      rejectButtonStyleClass: 'p-button-secondary',
       accept: () => {
         this.deleteJob(job);
+        this.cdr.detectChanges();
       },
     });
     //this.displayDialog = true;
