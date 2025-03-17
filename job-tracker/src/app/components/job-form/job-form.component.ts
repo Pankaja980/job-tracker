@@ -1,5 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule ,FormsModule} from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule,
+} from '@angular/forms';
 import { Job } from '../../models/job';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
@@ -11,9 +23,14 @@ import { DialogModule } from 'primeng/dialog';
   templateUrl: './job-form.component.html',
   styleUrls: ['./job-form.component.css'],
   standalone: true, // ✅ Standalone component mode
-  imports: [DropdownModule,FormsModule,
-    CommonModule,ButtonModule,DialogModule,ReactiveFormsModule
-  ] // ✅ Ensure proper module imports
+  imports: [
+    DropdownModule,
+    FormsModule,
+    CommonModule,
+    ButtonModule,
+    DialogModule,
+    ReactiveFormsModule,
+  ], // ✅ Ensure proper module imports
 })
 export class JobFormComponent implements OnInit {
   @Input() job: Job | null = null;
@@ -25,9 +42,14 @@ export class JobFormComponent implements OnInit {
   jobForm!: FormGroup;
   levelOptions: { label: string; value: string }[] = []; // 🔹 Pre-processed dropdown options
   statusOptions: { label: string; value: string }[] = []; // 🔹 Pre-processed status options
-  // selectedJobLevel: string = ''; 
-  // selectedJobStatus: string = ''; 
-  jobStatuses: string[] = ['Applied', 'Interview Scheduled', 'Offer Received', 'Rejected'];
+  // selectedJobLevel: string = '';
+  // selectedJobStatus: string = '';
+  jobStatuses: string[] = [
+    'Applied',
+    'Interview Scheduled',
+    'Offer Received',
+    'Rejected',
+  ];
   // openDialog() {
   //   this.displayDialog = true;
   // }
@@ -46,34 +68,34 @@ export class JobFormComponent implements OnInit {
     //   this.initializeForm(); // Reinitialize form when input changes
     // }
     if (this.jobForm) {
-    if (this.job) {
-      this.jobForm.patchValue({
-        title: this.job.name,
-        company: this.job.company.name,
-        level: this.job.levels[0]?.name || '',
-        status: this.job.status
-      });
-    } else {
-      this.jobForm.reset();
+      if (this.job) {
+        this.jobForm.patchValue({
+          title: this.job.name,
+          company: this.job.company.name,
+          level: this.job.levels[0]?.name || '',
+          status: this.job.status,
+        });
+      } else {
+        this.jobForm.reset();
+      }
     }
   }
-}
 
-    initializeForm():void{
+  initializeForm(): void {
     // ✅ Prepare dropdown options in TypeScript instead of the template
-    this.levelOptions = this.jobLevels.map(l => ({ label: l, value: l }));
-    this.statusOptions = this.jobStatuses.map(s => ({ label: s, value: s }));
+    this.levelOptions = this.jobLevels.map((l) => ({ label: l, value: l }));
+    this.statusOptions = this.jobStatuses.map((s) => ({ label: s, value: s }));
 
     // ✅ Initialize reactive form
     this.jobForm = this.fb.group({
       title: [this.job?.name || '', Validators.required],
-      company: [this.job?.company?.name ||'', Validators.required],
-      level: [this.job?.levels?.[0]?.name ||'', Validators.required],
-      status: [this.job?.status ||'', Validators.required]
+      company: [this.job?.company?.name || '', Validators.required],
+      level: [this.job?.levels?.[0]?.name || '', Validators.required],
+      status: [this.job?.status || '', Validators.required],
     });
   }
 
-    // ✅ Populate form if job is provided
+  // ✅ Populate form if job is provided
   //   if (this.job) {
   //     this.jobForm.patchValue({
   //       name: this.job.name,
@@ -92,13 +114,12 @@ export class JobFormComponent implements OnInit {
         name: this.jobForm.value.title,
         company: { name: this.jobForm.value.company },
         levels: [{ name: this.jobForm.value.level }],
-        status: this.jobForm.value.jobStatus
+        status: this.jobForm.value.jobStatus,
       };
       console.log(jobData);
       this.saveJob.emit(jobData);
-     this.displayDialog = false;
+      this.displayDialog = false;
     }
-    
   }
   // saveJob() {
   //   if (this.jobForm.valid) {
@@ -108,7 +129,7 @@ export class JobFormComponent implements OnInit {
   //     console.log('Form is invalid');
   //   }
   // }
-  
+
   onCancel(): void {
     this.displayDialog = false;
     this.cancel.emit();

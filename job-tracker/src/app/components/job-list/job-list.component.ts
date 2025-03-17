@@ -23,7 +23,7 @@ import {
   FormsModule,
   FormGroup,
   FormControl,
-  ReactiveFormsModule,
+  
   Validators,
 } from '@angular/forms';
 import { JobCategorySelectorComponent } from '../job-category-selector/job-category-selector.component';
@@ -97,28 +97,7 @@ export class JobListComponent implements OnInit {
   //   }
   searchText: string = '';
 
-  onSearch(event: any): void {
-    this.searchText = event.target.value.toLowerCase();
-    this.filterJobs();
-    this.filteredJobs$.subscribe(filteredJobs => {
-      if (filteredJobs.length === 0) {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'No Results',
-        detail: 'No jobs found matching your search criteria',
-      });
-      }
-    });
-  }
-  filterJobs(): void {
-    this.filteredJobs$ = this.jobs$.pipe(
-      map((jobs) =>
-        jobs.filter((job) =>
-          job.name.toLowerCase().includes(this.searchText.toLowerCase())
-        )
-      )
-    );
-  }
+  
 
 
   constructor(
@@ -143,7 +122,36 @@ export class JobListComponent implements OnInit {
     this.filteredJobs$ = this.jobs$;
     this.applyFilters();
   }
-
+  onSearch(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchText = inputElement.value.toLowerCase();
+    this.filterJobs();
+    this.filteredJobs$.subscribe(filteredJobs => {
+      if (filteredJobs.length === 0) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'No Results',
+        detail: 'No jobs found matching your search criteria',
+      });
+      }
+    });
+  }
+  filterJobs(): void {
+    this.filteredJobs$ = this.jobs$.pipe(
+      map((jobs) =>
+        jobs.filter((job) =>
+          job.name.toLowerCase().includes(this.searchText.toLowerCase())
+        )
+      )
+    );
+  }
+  // showJobInfo(job: Job): void {
+  //   this.messageService.add({
+  //     severity: 'info',
+  //     summary: 'Job Details',
+  //     detail: `Title: ${job.name}, Company: ${job.company}, Level: ${this.getJobLevels(job)}, Status: ${job.status}`,
+  //   });
+  // }
   applyFilters(): void {
     this.filteredJobs$ = this.jobs$.pipe(
       map((jobs) => {
@@ -205,8 +213,8 @@ export class JobListComponent implements OnInit {
   //   this.store.dispatch(JobActions.updateJob({ job: { ...job, status } }));
   //   this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Job status updated successfully' });
   // }
-  onStatusChange(job: Job, event: any): void {
-    const newStatus = event.value;
+  onStatusChange(job: Job, newStatus: string): void {
+    //const newStatus = event.value;
     const updatedJob = { ...job, status:newStatus }; // Create a new job object
     this.store.dispatch(JobActions.updateJob({ job: updatedJob })); // Dispatch updated job
     this.messageService.add({
@@ -266,10 +274,14 @@ export class JobListComponent implements OnInit {
       rejectLabel: 'Cancel',
       acceptButtonStyleClass: 'p-button-danger', // Red delete button
       rejectButtonStyleClass: 'p-button-secondary',
+      // accept: () => {
+      // this.deleteJob(job);
+      // this.cdr.detectChanges();
       accept: () => {
         this.deleteJob(job);
         this.cdr.detectChanges();
       },
+      
     });
     //this.displayDialog = true;
   }

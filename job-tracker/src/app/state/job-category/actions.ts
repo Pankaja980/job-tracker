@@ -16,7 +16,7 @@ export const addJobSuccess = createAction(
   props<{ job: Job }>()
 );
 
-// 🔹 Update Job
+//  Update Job
 export const updateJob = createAction(
   '[Job] Update Job',
   props<{ job: Job }>()
@@ -26,7 +26,7 @@ export const updateJobSuccess = createAction(
   props<{ job: Job }>()
 );
 
-// 🔹 Delete Job
+//  Delete Job
 export const deleteJob = createAction(
   '[Job] Delete Job',
   props<{ id: number }>()

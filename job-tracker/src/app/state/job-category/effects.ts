@@ -64,6 +64,16 @@ export class JobEffects {
       )
     )
   );
+  // showJobInfo$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(JobActions.showJobInfo),
+  //     tap(action => {
+  //       localStorage.setItem('jobInfo', JSON.stringify(action.job));
+  //     })
+  //   ),
+  //   { dispatch: false }
+  // );
+
   deleteJob$ = createEffect(() =>
     this.actions$.pipe(
       ofType(JobActions.deleteJob),
@@ -81,7 +91,7 @@ export class JobEffects {
       this.actions$.pipe(
         ofType(JobActions.addJob, JobActions.updateJob, JobActions.deleteJob),
         withLatestFrom(this.store.select(selectJobs)),
-        tap(([_, jobs]) => {
+        tap(([, jobs]) => {
           localStorage.setItem('jobs', JSON.stringify(jobs)); // Store updated jobs
         })
       ),

@@ -1,9 +1,13 @@
-body {
+@import "primeicons/primeicons.css";
+
+
+
+/* body {
     background-image: url('assets/jobtrack.png');  /* Set doodle background */
-    background-size: cover;  /* Adjust size */
-    background-position: center;  /* Center the image */
-    background-repeat: repeat;  /* Repeat across the screen */
-    background-attachment: scroll;  /* Make it fixed while scrolling */
-    background-size: 100px 150px;
-}
+    /* background-size: cover;  /* Adjust size */
+    /* background-position: center;  /* Center the image */
+    /* background-repeat: repeat;  Repeat across the screen */
+    /* background-attachment: scroll;  Make it fixed while scrolling */
+    /* background-size: 100px 150px; */ 
+/*} */ 
 
