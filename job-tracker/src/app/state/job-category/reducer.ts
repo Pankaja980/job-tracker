@@ -39,7 +39,7 @@ export const jobReducer = createReducer(
   on(JobActions.updateJobSuccess, (state, { job }) => {
     const updatedJobs = state.jobs.map((j) => (j.id === job.id ? job : j));
     localStorage.setItem('jobs', JSON.stringify(updatedJobs)); // ✅ Save to localStorage
-    return { ...state, jobs: updatedJobs, status: 'Job updated successfully' };
+    return { ...state, jobs: updatedJobs };
   }),
 
   // Delete job + Save to localStorage

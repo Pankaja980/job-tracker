@@ -230,7 +230,7 @@ export class JobListComponent implements OnInit {
     this.messageService.add({
       severity: 'success',
       summary: 'Updated',
-      detail: 'Job status updated successfully',
+      detail: `Job status updated to ${newStatus} successfully`,
     });
   }
 

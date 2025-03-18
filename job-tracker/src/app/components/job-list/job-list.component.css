@@ -4,8 +4,9 @@
   flex-direction: column;
   height: 100vh;
   background-color: #f8f9fa;
-  padding: 10px;
+  padding-top: 70px;
 }
+
 
 /* 🔹 Top Navigation Bar */
 .top-nav {
@@ -16,6 +17,11 @@
   color: white;
   padding: 15px 20px;
   width: 100%;
+  position:fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+   z-index: 1000; 
 }
 
 /* 🔹 Search, Level Dropdown & Add Job (Aligned Horizontally) */
@@ -68,6 +74,9 @@
   justify-content: space-between;
   gap: 20px;
   margin-top: 15px;
+  overflow-y: auto; /* Enables vertical scrolling for the page */
+  flex-grow: 1;
+  padding: 10px;
 }
 
 /* 🔹 Job List Table (Left Side) */
@@ -102,6 +111,7 @@
   font-weight: bold;
 }
 .p-datatable th {
+  font-size: 16px;
   padding: 10px;
   text-align: left;
 }
@@ -118,6 +128,7 @@
   color: white !important;
   border: none !important;
 }
+
 
 
 /* 🔹 Responsive Design */

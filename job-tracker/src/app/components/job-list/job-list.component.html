@@ -1,7 +1,10 @@
 <div class="main-container">
   <!-- 🔹 Navigation Bar (Fixed at Top) -->
+   
   <div class="top-nav">
+    <h1>Job Tracker</h1>
     <div class="search-container">
+      <button pButton type="button" icon="pi pi-search" class="search-btn"></button>
       <input
         type="text"
         pInputText
@@ -9,7 +12,7 @@
         (input)="onSearch($event)"
         class="search-input"
       />
-      <button pButton type="button" icon="pi pi-search" class="search-btn"></button>
+      
     </div>
 
     <app-job-category-selector
@@ -57,8 +60,9 @@
             <p-dropdown
               *ngIf="isEditMode && selectedJob?.id === job.id"
               [options]="jobStatusOptions"
-              optionLabel="label"
-              (onChange)="onStatusChange(job, $event.value)">
+              
+              [(ngModel)]="job.status"
+              (ngModelChange)="onStatusChange(job, $event.value)">
             </p-dropdown>
             <span *ngIf="!isEditMode || selectedJob?.id !== job.id">
               {{ job.status || "Applied" }}
@@ -89,7 +93,7 @@
       [first]="first"
       [rows]="rows"
       [totalRecords]="(filteredJobs$ | async)?.length || 0"
-      [rowsPerPageOptions]="[5, 10, 20]">
+       [rowsPerPageOptions]="[5, 10, 20]"> 
     </p-paginator>
   </div>
 
