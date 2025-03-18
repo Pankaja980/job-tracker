@@ -1,75 +1,50 @@
-<div class="main-conatiner">
-<div class="job-tracker-container">
-  <!-- 🔹 Page Title -->
-  <div class="sidebar">
-    <h2 class="job-tracker">Job Tracker</h2>
-    <!--   -->
-    <!-- 🔹 Job Category Selector (Filter by Level) -->
-    <div class="controls">
-      <app-job-category-selector
-        (selectedCategoryChange)="onLevelChange($event)"
-      >
-      </app-job-category-selector>
-      <br />
-      <!-- 🔹 Add Job Button -->
-      <div >
-        <button
-          pButton
-          type="button"
-          icon="pi pi-plus"
-          class="add-job-btn"
-          (click)="addJob()"
-        >
-          Add Job
-        </button>
-        <br>
-        <!-- 🔹 Job Title Search -->
-        <div
-          class="search-container"
-          style="display: flex; align-items: center; margin-left: auto"
-        >
-        <button
-        class="search-btn"
-        pButton
-        type="button"
-        icon="pi pi-search"
-        style="margin-left: 8px"
-      ></button>
-          <input
-            type="text"
-            pInputText
-            placeholder="Search Job Titles"
-            (input)="onSearch($event)"
-            class="search-input"
-            style="margin-right: 8px"
-          />
-         
-          <!-- <p-button label="Search" icon="pi pi-search" iconPos="top" (input)="onSearch($event)" type="text" class="search-input" /> -->
-        </div>
-      </div>
+<div class="main-container">
+  <!-- 🔹 Navigation Bar (Fixed at Top) -->
+  <div class="top-nav">
+    <div class="search-container">
+      <input
+        type="text"
+        pInputText
+        placeholder="Search Job Titles"
+        (input)="onSearch($event)"
+        class="search-input"
+      />
+      <button pButton type="button" icon="pi pi-search" class="search-btn"></button>
     </div>
+
+    <app-job-category-selector
+      (selectedCategoryChange)="onLevelChange($event)">
+    </app-job-category-selector>
+
+    <button
+      pButton
+      type="button"
+      icon="pi pi-plus"
+      label="Add Job"
+      class="p-button-primary"
+      (click)="addJob()">
+    </button>
   </div>
-  </div>
-  <!-- 🔹 Confirm Delete Dialog -->
-  
-  <!-- 🔹 Jobs Table -->
+  <div class="page-container">
   <div class="job-list-container">
+    <!--  Job List Table -->
     <p-table
       #dt
       [value]="(filteredJobs$ | async) || []"
       [paginator]="true"
-      [rows]="5"
+      [rows]="rows"
+      [first]="first"
       responsiveLayout="scroll"
       [stripedRows]="true"
-      class="job-table"
-    >
+      class="job-table">
+      
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 50%">Job Title</th>
-          <th style="width: 20%">Company</th>
-          <th style="width: 10%">Level</th>
-          <th style="width: 10%">Status</th>
-          <th style="width: 10%">Actions</th>
+          <th pSortableColumn="name">Job Title<p-sortIcon field="name"></p-sortIcon></th>
+          <th  pSortableColumn="company.name">Company<p-sortIcon field="company.name"></p-sortIcon></th>
+          <th>Level</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
       </ng-template>
 
@@ -79,81 +54,71 @@
           <td>{{ job.company.name }}</td>
           <td>{{ getJobLevels(job) }}</td>
           <td>
-            <!-- <p-dropdown 
-            [options]="jobStatusOptions"
-            [(ngModel)]="job.status"
-            (onChange)="onStatusChange(job, $event.value)">
-          </p-dropdown> -->
-            <!-- If editing or adding, show the dropdown -->
             <p-dropdown
               *ngIf="isEditMode && selectedJob?.id === job.id"
-              formControlName="jobStatus"
               [options]="jobStatusOptions"
               optionLabel="label"
-              (onChange)="onStatusChange(job, $event.value)"
-            >
+              (onChange)="onStatusChange(job, $event.value)">
             </p-dropdown>
-
-            <!-- Otherwise, show status as plain text -->
             <span *ngIf="!isEditMode || selectedJob?.id !== job.id">
               {{ job.status || "Applied" }}
             </span>
           </td>
           <td>
-            <button
-              pButton
-              icon="pi pi-pencil"
-              class="edit-btn"
-              (click)="editJob(job)"
-            ></button
-            ><br />
-            
-            <button
-              pButton
-              icon="pi pi-trash"
-              class="delete-btn"
-              (click)="confirmDelete(job)"
-            >
-            
-            </button>
+            <div class="action-buttons">
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="edit-btn"
+                (click)="editJob(job)">
+              </button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="delete-btn"
+                (click)="confirmDelete(job)">
+              </button>
+            </div>
           </td>
         </tr>
       </ng-template>
     </p-table>
+
+    <p-paginator
+      (onPageChange)="onPageChange($event)"
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="(filteredJobs$ | async)?.length || 0"
+      [rowsPerPageOptions]="[5, 10, 20]">
+    </p-paginator>
   </div>
-  </div>
-  <!-- 🔹 Add/Edit Job Dialog -->
+
+  <!--  Add/Edit Job Dialog -->
   <p-dialog
     [(visible)]="displayDialog"
     [modal]="true"
-    header="{{ selectedJob ? 'Edit Job' : 'Add Job' }}"
-  >
+    [closable]="false"
+    header="{{ selectedJob ? 'Edit Job' : 'Add Job' }}">
+    
     <app-job-form
       [job]="selectedJob"
       (saveJob)="onJobSave($event)"
-      (cancel)="onCancel()"
-    ></app-job-form>
+      (cancel)="onCancel()">
+    </app-job-form>
   </p-dialog>
 
-   <!-- 🔹 Confirm Delete Dialog -->
-   <p-confirmDialog
-   header="Delete Job"
-   icon="pi pi-exclamation-triangle"
-   acceptLabel="Delete"
-   rejectLabel="Cancel"
-   [style]="{ width: '400px', backgroundColor: 'white' ,boxShadow: '0px 4px 10px rgba(0,0,0,0.2)', padding: '20px'}"
-   acceptButtonStyleClass="p-button p-button-danger"
-   rejectButtonStyleClass="p-button p-button-secondary"
- ></p-confirmDialog>
-  <!-- 🔹 Toast Messages -->
-  <p-toast></p-toast>
+  <!--  Confirm Delete Dialog (PrimeNG) -->
+  <p-confirmDialog
+    header="Delete Job"
+    icon="pi pi-exclamation-triangle"
+    [style]="{ width: '400px' }">
+  </p-confirmDialog>
 
-  <!-- 🔹 Job Levels Chart (At the Bottom) -->
+  <!--  Job Levels Chart -->
   <div class="chart-container">
-    <p-chart
-      type="bar"
-      [data]="levelChartData"
-      [options]="levelChartOptions"
-    ></p-chart>
+    <p-chart type="bar" [data]="levelChartData" [options]="levelChartOptions"></p-chart>
   </div>
 
+  <p-toast></p-toast>
+</div>
+</div>

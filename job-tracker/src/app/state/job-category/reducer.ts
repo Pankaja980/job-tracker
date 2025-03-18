@@ -18,6 +18,7 @@ const initialState: JobState = {
   jobs: initialJobs,
 };
 
+
 export const jobReducer = createReducer(
   initialState,
   on(JobActions.loadJobLevelsSuccess, (state, { levels }) => ({
@@ -31,20 +32,20 @@ export const jobReducer = createReducer(
   on(JobActions.addJobSuccess, (state, { job }) => {
     const updatedJobs = [...state.jobs, job];
     localStorage.setItem('jobs', JSON.stringify(updatedJobs)); // ✅ Save to localStorage
-    return { ...state, jobs: updatedJobs };
+    return { ...state, jobs: updatedJobs, status: 'Job added successfully' };
   }),
 
   // Update job + Save to localStorage
   on(JobActions.updateJobSuccess, (state, { job }) => {
     const updatedJobs = state.jobs.map((j) => (j.id === job.id ? job : j));
     localStorage.setItem('jobs', JSON.stringify(updatedJobs)); // ✅ Save to localStorage
-    return { ...state, jobs: updatedJobs };
+    return { ...state, jobs: updatedJobs, status: 'Job updated successfully' };
   }),
 
   // Delete job + Save to localStorage
   on(JobActions.deleteJobSuccess, (state, { id }) => {
     const updatedJobs = state.jobs.filter((job) => job.id !== id);
     localStorage.setItem('jobs', JSON.stringify(updatedJobs)); // ✅ Save to localStorage
-    return { ...state, jobs: updatedJobs };
+    return { ...state, jobs: updatedJobs, status: 'Job deleted successfully' };
   })
 );

@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 // import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // import { ConfirmationService } from 'primeng/api';
-
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 import {
   FormsModule,
@@ -45,6 +45,7 @@ import { ChartData, ChartOptions } from 'chart.js';
     FormsModule,
     JobFormComponent,
     JobCategorySelectorComponent,
+    PaginatorModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './job-list.component.html',
@@ -60,6 +61,9 @@ export class JobListComponent implements OnInit {
   isEditMode: boolean = false;
   jobForm: FormGroup;
   editingJobId: number | null = null;
+
+  first = 0; // First page index
+  rows = 10; // Default rows per page
 
   jobStatuses = [
     'Applied',
@@ -97,6 +101,10 @@ export class JobListComponent implements OnInit {
   //   }
   searchText: string = '';
 
+  onPageChange(event: PaginatorState  ):void {
+    this.first = event.first ??0 ;
+    this.rows = event.rows ??10;
+  }
   
 
 
@@ -114,6 +122,7 @@ export class JobListComponent implements OnInit {
       jobStatus: new FormControl('', Validators.required),
     });
   }
+
 
   ngOnInit(): void {
     this.store.dispatch(JobActions.loadJobs());
@@ -137,6 +146,7 @@ export class JobListComponent implements OnInit {
     });
   }
   filterJobs(): void {
+    //const searchWords = this.searchText.split(' ').filter(word => word);
     this.filteredJobs$ = this.jobs$.pipe(
       map((jobs) =>
         jobs.filter((job) =>
@@ -267,7 +277,7 @@ export class JobListComponent implements OnInit {
 
   confirmDelete(job: Job): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete "${job.name}"?`,
+      message: "Are you sure you want to delete ?",
       header: 'Delete Job',
       icon: 'pi pi-exclamation-triangle', // Warning symbol
       acceptLabel: 'Delete',
@@ -279,7 +289,7 @@ export class JobListComponent implements OnInit {
       // this.cdr.detectChanges();
       accept: () => {
         this.deleteJob(job);
-        this.cdr.detectChanges();
+        //this.cdr.detectChanges();
       },
       
     });
