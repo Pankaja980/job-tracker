@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { loadJobLevels, loadJobs,  } from '../../state/job-category/actions';
 import { selectJobLevels, selectJobs } from '../../state/job-category/selector';
 import { Job } from '../../models/job';
-import { HttpClient } from '@angular/common/http';
+//import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-job-category-selector',

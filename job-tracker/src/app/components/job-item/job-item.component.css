@@ -1,12 +1,24 @@
-.job-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  h3 {
-    margin: 0;
-    font-size: 18px;
-  }
-  
+tr {
+  height: 0.5cm;
+  border-bottom: 1px solid #ddd;
+}
+
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+.edit-btn {
+  background-color: #ffc107 !important; /* Yellow */
+  color: black !important;
+  border: none;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #dc3545 !important; /* Red */
+  color: white !important;
+  border: none;
+  cursor: pointer;
+}

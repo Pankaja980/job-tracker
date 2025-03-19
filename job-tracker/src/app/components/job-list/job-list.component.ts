@@ -28,6 +28,7 @@ import {
 } from '@angular/forms';
 import { JobCategorySelectorComponent } from '../job-category-selector/job-category-selector.component';
 import { ChartData, ChartOptions } from 'chart.js';
+import { JobItemComponent } from '../job-item/job-item.component';
 //import { addJob } from '../../state/job-category/actions';
 
 @Component({
@@ -44,6 +45,7 @@ import { ChartData, ChartOptions } from 'chart.js';
     DropdownModule,
     FormsModule,
     JobFormComponent,
+    JobItemComponent,
     JobCategorySelectorComponent,
     PaginatorModule,
   ],
@@ -101,11 +103,11 @@ export class JobListComponent implements OnInit {
   //   }
   searchText: string = '';
 
-  onPageChange(event: PaginatorState  ):void {
+ 
+   onPageChange(event: PaginatorState  ):void {
     this.first = event.first ??0 ;
     this.rows = event.rows ??10;
   }
-  
 
 
   constructor(
@@ -149,9 +151,14 @@ export class JobListComponent implements OnInit {
     //const searchWords = this.searchText.split(' ').filter(word => word);
     this.filteredJobs$ = this.jobs$.pipe(
       map((jobs) =>
-        jobs.filter((job) =>
-          job.name.toLowerCase().includes(this.searchText.toLowerCase())
-        )
+      jobs.filter((job) =>
+        (job.name?.toLowerCase().includes(this.searchText.toLowerCase()) || false) ||
+        (job.company?.name?.toLowerCase().includes(this.searchText.toLowerCase()) || false) ||
+        (job.levels?.some((level) =>
+          level.name?.toLowerCase().includes(this.searchText.toLowerCase())
+        ) || false) ||
+        (job.status?.toLowerCase().includes(this.searchText.toLowerCase()) || false)
+      )
       )
     );
   }
