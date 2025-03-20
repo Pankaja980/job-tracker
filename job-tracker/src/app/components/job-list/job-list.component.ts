@@ -232,7 +232,8 @@ export class JobListComponent implements OnInit {
   // }
   onStatusChange(job: Job, newStatus: string): void {
     //const newStatus = event.value;
-    const updatedJob = { ...job, status:newStatus }; // Create a new job object
+    // const updatedJob = { ...job, status:newStatus }; // Create a new job object
+    const updatedJob = Object.assign({}, job, { status: newStatus });
     this.store.dispatch(JobActions.updateJob({ job: updatedJob })); // Dispatch updated job
     this.messageService.add({
       severity: 'success',

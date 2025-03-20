@@ -1,7 +1,15 @@
 @import "primeicons/primeicons.css";
+* {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+  }
 
-
-
+/* Ensure the delete dialog has a white background */
+.ui-dialog .ui-dialog-content {
+    background-color: white !important;
+  }
 
 /* body {
     background-image: url('assets/jobtrack.png');  /* Set doodle background */

@@ -114,7 +114,7 @@ export class JobFormComponent implements OnInit {
         name: this.jobForm.value.title,
         company: { name: this.jobForm.value.company },
         levels: [{ name: this.jobForm.value.level }],
-        status: this.jobForm.value.jobStatus,
+        status: this.jobForm.value.status,
       };
       console.log(jobData);
       this.saveJob.emit(jobData);

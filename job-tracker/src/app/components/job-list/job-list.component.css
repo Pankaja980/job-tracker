@@ -105,13 +105,13 @@
   align-items: center;
 }
 /* Table Header Styling */
-.p-datatable thead {
+.p-table thead {
   background-color: #007bff; /* Blue */
   color: white;
   font-weight: bold;
 }
-.p-datatable th {
-  font-size: 16px;
+.p-table th {
+  /* font-size: 16px; */
   padding: 10px;
   text-align: left;
 }
@@ -121,12 +121,35 @@
   background-color: #ffc107 !important; /* Yellow for Edit */
   color: black !important;
   border: none !important;
+  margin-right: 10px;
 }
 
 .delete-btn {
   background-color: #dc3545 !important; /* Red for Delete */
   color: white !important;
   border: none !important;
+}
+/* Ensure White Background for Confirm Dialog */
+.custom-confirm-dialog .p-dialog-content {
+  background-color: white !important;
+  opacity: 1 !important;
+}
+
+/* Ensure Header and Footer are also Styled */
+.custom-confirm-dialog .p-dialog-header,
+.custom-confirm-dialog .p-dialog-footer {
+  background-color: white !important;
+  opacity: 1 !important;
+}
+
+/* Fix Any Potential Backdrop Issue */
+.p-dialog-mask {
+  background: rgba(0, 0, 0, 0.5) !important; /* Ensure backdrop works */
+}
+
+/* Override PrimeNG Default Styles if Needed */
+body .p-dialog-content {
+  background-color: white !important;
 }
 
 
@@ -148,4 +171,7 @@
     flex-direction: column;
     align-items: center;
   }
+
+
+
 }
