@@ -10,15 +10,15 @@ import { bootstrapApplication } from '@angular/platform-browser';
 //import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-root',
-  standalone: true, // ✅ Standalone component
+  standalone: true, //  Standalone component
   imports: [CommonModule, JobListComponent,
     ToastModule
-  ], // ✅ Import JobListComponent
+  ], // Import JobListComponent
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers:[
-    MessageService,  // ✅ Provide PrimeNG ToastService
-    //provideStore({jobState: jobReducer}), // ✅ Register NgRx Store
+    MessageService,  // Provide PrimeNG ToastService
+    //provideStore({jobState: jobReducer}), //  Register NgRx Store
     //provideEffects([]), 
   ],
 })

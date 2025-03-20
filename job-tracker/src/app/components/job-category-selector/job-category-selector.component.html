@@ -8,9 +8,9 @@
     placeholder="Choose a level">
   </p-dropdown>
 </div> -->
-<label for="levelSelect"><strong>Level:</strong></label>
-<div class="dropdown-container">
-  <select id="levelSelect" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)">
+<label for="levelSelect"><strong>Levels:</strong></label>
+<div class="dropdown-container" >
+  <select id="levelSelect" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)" >
     <option value="">All</option>
     <option *ngFor="let level of jobLevels$ | async" [value]="level.value">
       {{ level.label }}

@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 // import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // import { ConfirmationService } from 'primeng/api';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { PaginatorModule } from 'primeng/paginator';
 
 import {
   FormsModule,
@@ -64,8 +64,8 @@ export class JobListComponent implements OnInit {
   jobForm: FormGroup;
   editingJobId: number | null = null;
 
-  first = 0; // First page index
-  rows = 10; // Default rows per page
+  //first = 0; // First page index
+  //rows = 10; // Default rows per page
 
   jobStatuses = [
     'Applied',
@@ -104,10 +104,10 @@ export class JobListComponent implements OnInit {
   searchText: string = '';
 
  
-   onPageChange(event: PaginatorState  ):void {
-    this.first = event.first ??0 ;
-    this.rows = event.rows ??10;
-  }
+  //  onPageChange(event: PaginatorState  ):void {
+  //   this.first = event.first ??0 ;
+  //   this.rows = event.rows ??10;
+  // }
 
 
   constructor(
@@ -215,7 +215,21 @@ export class JobListComponent implements OnInit {
         },
       ],
     };
+    this.levelChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false, // Allows custom height/width
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            font: {
+              size: 16, // Increase font size
+            },
+          },
+        },
+      }
   }
+}
 
   getJobLevels(job: Job): string {
     return job.levels?.map((level) => level.name).join(', ') || 'N/A';
@@ -230,17 +244,17 @@ export class JobListComponent implements OnInit {
   //   this.store.dispatch(JobActions.updateJob({ job: { ...job, status } }));
   //   this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Job status updated successfully' });
   // }
-  onStatusChange(job: Job, newStatus: string): void {
+  //onStatusChange(job: Job, newStatus: string): void {
     //const newStatus = event.value;
     // const updatedJob = { ...job, status:newStatus }; // Create a new job object
-    const updatedJob = Object.assign({}, job, { status: newStatus });
-    this.store.dispatch(JobActions.updateJob({ job: updatedJob })); // Dispatch updated job
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Updated',
-      detail: `Job status updated to ${newStatus} successfully`,
-    });
-  }
+    //const updatedJob = { ...job,  status: newStatus };
+   // this.store.dispatch(JobActions.updateJob({ job: updatedJob })); // Dispatch updated job
+  //   this.messageService.add({
+  //     severity: 'success',
+  //     summary: 'Updated',
+  //     detail: `Job status updated to ${newStatus} successfully`,
+  //   });
+  // }
 
   addJob(): void {
     //this.jobForm.reset();
@@ -278,25 +292,38 @@ export class JobListComponent implements OnInit {
       title: job.name,
       company: job.company,
       jobLevel: job.levels[0]?.name || ' ',
-      jobStatus: job.status,
+      jobStatus: job.status || 'Applied',
     });
     this.displayDialog = true;
   }
 
   confirmDelete(job: Job): void {
     this.confirmationService.confirm({
-      message: "Are you sure you want to delete ?",
+      message: "Are you sure you want to delete this job ?",
       header: 'Delete Job',
       icon: 'pi pi-exclamation-triangle', // Warning symbol
       acceptLabel: 'Delete',
+      acceptButtonProps: {
+        label: 'Delete',
+        severity: 'danger',
+        outlined:true,
+    },
       rejectLabel: 'Cancel',
-      acceptButtonStyleClass: 'p-button-danger', // Red delete button
-      rejectButtonStyleClass: 'p-button-secondary',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+    },
       // accept: () => {
       // this.deleteJob(job);
       // this.cdr.detectChanges();
       accept: () => {
-        this.deleteJob(job);
+        this.store.dispatch(JobActions.deleteJob({ id: job.id }));
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Deleted',
+      detail: 'Job deleted successfully',
+    });
         //this.cdr.detectChanges();
       },
       
@@ -304,15 +331,21 @@ export class JobListComponent implements OnInit {
     //this.displayDialog = true;
   }
 
-  deleteJob(job: Job): void {
-    this.store.dispatch(JobActions.deleteJob({ id: job.id }));
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Deleted',
-      detail: 'Job deleted successfully',
-    });
+  // deleteJob(job: Job): void {
+   
+      // acceptButtonStyleClass: 'p-button-danger', // Red delete button
+      // rejectButtonStyleClass: 'p-button-secondary',
+     
+    // this.store.dispatch(JobActions.deleteJob({ id: job.id }));
+    // this.messageService.add({
+    //   severity: 'success',
+    //   summary: 'Deleted',
+    //   detail: 'Job deleted successfully',
+    // });
     // this.displayDialog = true;
-  }
+  //}
+
+
 
   onJobSave(job: Job): void {
     //   if (job.id) {
