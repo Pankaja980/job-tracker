@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #10644a;
+  background-color: #40389b;
   color: white;
   padding: 15px 20px;
   width: 100%;
@@ -24,7 +24,7 @@
    z-index: 1000; 
 }
 
-/* 🔹 Search, Level Dropdown & Add Job (Aligned Horizontally) */
+/*  Search, Level Dropdown & Add Job (Aligned Horizontally) */
 .controls-container {
   display: flex;
   align-items: center;
@@ -36,7 +36,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* 🔹 Search Bar */
+/*  Search Bar */
 .search-container {
   display: flex;
   align-items: center;
@@ -76,7 +76,7 @@ p-table ::ng-deep .p-datatable-wrapper {
 } */
 /* Fix table header (th) at the top */
 p-table ::ng-deep thead th {
-  background-color: #007ad9 !important;  /* Set background color */
+  background-color: #1c7810 !important;  /* Set background color */
   color: white !important;              /* Change text color to white */
   font-size: 18px;                       /* Increase font size */
   padding: 12px !important;              /* Add padding */
@@ -218,7 +218,7 @@ body .p-dialog-content {
 
 
 
-/* 🔹 Responsive Design */
+/*  Responsive Design */
 @media (max-width: 1024px) {
   .page-container {
     flex-direction: column;
@@ -235,7 +235,13 @@ body .p-dialog-content {
     flex-direction: column;
     align-items: center;
   }
-
+  p-table ::ng-deep tbody td {
+    height: 10px;  /* Increase row height */
+    padding: 5px; /* Add padding */
+    font-size: 12px;
+    vertical-align: middle; /* Align text to center vertically */
+    /* font-size: 16px; */
+  }
 
 
 }
