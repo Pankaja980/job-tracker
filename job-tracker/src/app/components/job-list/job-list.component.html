@@ -1,23 +1,35 @@
+<p-toast />
+    <p-confirmpopup />
+  <!-- <p-confirmDialog></p-confirmDialog> -->
+
 <div class="main-container">
   <!--  Navigation Bar (Fixed at Top) -->
-  <p-toast />
-  <p-confirmDialog></p-confirmDialog>
+ 
+  <!-- <p-confirmDialog></p-confirmDialog> -->
   <div class="top-nav">
+    
     <h1>Job Tracker</h1>
     <div class="search-container">
-      <button
+      <!-- <button
         pButton
         type="button"
         icon="pi pi-search"
         class="search-btn"
-      ></button>
-      <input
+      ></button> -->
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search" />
+        <input type="text" 
+        pInputText placeholder="     Search for job"
+        (input)="onSearch($event)"
+        class="search-input"/>
+    </p-iconfield>
+      <!-- <input
         type="text"
         pInputText
         placeholder="Search for Job..."
         (input)="onSearch($event)"
         class="search-input"
-      />
+      /> -->
     </div>
 
     <app-job-category-selector (selectedCategoryChange)="onLevelChange($event)">
@@ -42,6 +54,7 @@
         responsiveLayout="scroll"
         [stripedRows]="true"
         class="job-table"
+        [tableStyle]="{ 'min-width': '50rem' }"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -79,17 +92,22 @@
                 
                 
                 <p-button
-                  pButton
+                [rounded]="true"
+                [text]="true"
+                [raised]="true"
                   icon="pi pi-pencil"
                   class="edit-btn"
                   (click)="editJob(job)"
                />
-                <button
-                  pButton
+                <p-button
+                  [rounded]="true"
+                  [text]="true"
+                  [raised]="true"
+                  severity="danger"
                   icon="pi pi-trash"
                   class="delete-btn"
-                  (click)="confirmDelete(job)"
-                ></button>
+                  (onClick)="confirmDelete($event,job)"
+                />
               </div>
             </td>
           </tr>
@@ -107,7 +125,7 @@
       [style]="{ width: '400px' }"
       [acceptLabel]="'Delete'"
       [rejectLabel]="'Cancel'" -->
-    >  
+     
     <!-- </p-confirmDialog> --> 
       <!-- <p-paginator
         (onPageChange)="onPageChange($event)"
@@ -127,6 +145,7 @@
       header="{{ selectedJob ? 'Edit Job' : 'Add Job' }}"
     >
       <app-job-form
+      
         [job]="selectedJob"
         (saveJob)="onJobSave($event)"
         (cancel)="onCancel()"
@@ -149,3 +168,6 @@
     <!-- <p-toast></p-toast> -->
   </div>
 </div>
+
+
+

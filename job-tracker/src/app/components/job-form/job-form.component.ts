@@ -82,11 +82,11 @@ export class JobFormComponent implements OnInit {
   }
 
   initializeForm(): void {
-    // ✅ Prepare dropdown options in TypeScript instead of the template
+    
     this.levelOptions = this.jobLevels.map((l) => ({ label: l, value: l }));
     this.statusOptions = this.jobStatuses.map((s) => ({ label: s, value: s }));
 
-    // ✅ Initialize reactive form
+    //  Initialize reactive form
     this.jobForm = this.fb.group({
       title: [this.job?.name || '', Validators.required],
       company: [this.job?.company?.name || '', Validators.required],
@@ -95,7 +95,7 @@ export class JobFormComponent implements OnInit {
     });
   }
 
-  // ✅ Populate form if job is provided
+  //  Populate form if job is provided
   //   if (this.job) {
   //     this.jobForm.patchValue({
   //       name: this.job.name,

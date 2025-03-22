@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-//import { appConfig } from './app/app.config';
+import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideStore,provideState,StoreModule } from '@ngrx/store';
@@ -13,11 +13,14 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 //import { jobFeature, jobCategoryFeature } from './app/state/job-category/reducer';
 import { JobEffects } from './app/state/job-category/effects';
-import { jobReducer } from './app/state/job-category/reducer';  // ✅ Ensure the correct path
+import { jobReducer } from './app/state/job-category/reducer';  //  Ensure the correct path
 
 
 bootstrapApplication(AppComponent, {
-  providers: [provideHttpClient(), 
+  ...appConfig,
+  providers: [
+    ...(appConfig.providers || []),
+    
     provideStore({ job: jobReducer }),
     //provideState(jobFeature), 
     //provideState(jobCategoryFeature),

@@ -18,6 +18,9 @@ import { DropdownModule } from 'primeng/dropdown';
 // import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // import { ConfirmationService } from 'primeng/api';
 import { PaginatorModule } from 'primeng/paginator';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 import {
   FormsModule,
@@ -28,7 +31,7 @@ import {
 } from '@angular/forms';
 import { JobCategorySelectorComponent } from '../job-category-selector/job-category-selector.component';
 import { ChartData, ChartOptions } from 'chart.js';
-import { JobItemComponent } from '../job-item/job-item.component';
+//import { JobItemComponent } from '../job-item/job-item.component';
 //import { addJob } from '../../state/job-category/actions';
 
 @Component({
@@ -45,9 +48,11 @@ import { JobItemComponent } from '../job-item/job-item.component';
     DropdownModule,
     FormsModule,
     JobFormComponent,
-    JobItemComponent,
+    IconFieldModule,
+    InputIconModule,
     JobCategorySelectorComponent,
     PaginatorModule,
+    ConfirmPopupModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './job-list.component.html',
@@ -114,7 +119,7 @@ export class JobListComponent implements OnInit {
     private store: Store,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef //to trigger change detection and the view is updated.
   ) {
     this.jobs$ = this.store.select(selectJobs);
     this.jobForm = new FormGroup({
@@ -297,8 +302,9 @@ export class JobListComponent implements OnInit {
     this.displayDialog = true;
   }
 
-  confirmDelete(job: Job): void {
+  confirmDelete(event: Event,job: Job): void {
     this.confirmationService.confirm({
+      target: event.target as EventTarget,
       message: "Are you sure you want to delete this job ?",
       header: 'Delete Job',
       icon: 'pi pi-exclamation-triangle', // Warning symbol
@@ -387,4 +393,28 @@ export class JobListComponent implements OnInit {
     this.displayDialog = false; // Close dialog
     this.jobForm.reset(); // Reset form
   }
+ 
+  confirm1(event: Event) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: 'Are you sure you want to proceed?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'Cancel',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptButtonProps: {
+            label: 'Save'
+        },
+        accept: () => {
+            this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+        },
+        reject: () => {
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        }
+    });
+}
+
+
 }
