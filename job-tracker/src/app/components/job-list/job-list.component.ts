@@ -21,7 +21,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-
+//import { PaginatorModule } from 'primeng/paginator';
 import {
   FormsModule,
   FormGroup,
@@ -89,7 +89,7 @@ export class JobListComponent implements OnInit {
   // onEdit(job: Job): void {
   //   this.isEditMode = true;
   //   this.editingJobId = job.id;
-  //   this.jobForm.patchValue(job); // ✅ Pre-fill form with job details
+  //   this.jobForm.patchValue(job); //  Pre-fill form with job details
   //   this.displayDialog = true;
   // }
 

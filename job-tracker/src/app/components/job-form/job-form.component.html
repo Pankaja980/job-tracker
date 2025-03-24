@@ -1,6 +1,6 @@
 <!-- <p-dialog [(visible)]="displayDialog" [modal]="true" header="Add/Edit Job"> -->
 
-<form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="jobForm"  class="form-container" (ngSubmit)="onSubmit()">
   <div class="p-fluid">
     <!--  Job Title -->
     <div class="p-field">
@@ -49,13 +49,13 @@
         <select id="jobStatus" formControlName="status">
           <option value=""></option>
           <option *ngFor="let status of jobStatuses" [value]="status">
-            {{ status }}
+            {{ status ||'Applied' }}
           </option>
         </select>
       </div>
     </div>
     <br />
-    <!-- 🔹 Save Button -->
+    <!--  Save Button -->
     <div class="button-group">
       <button
         pButton

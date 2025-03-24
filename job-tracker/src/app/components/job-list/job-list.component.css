@@ -57,7 +57,7 @@
   cursor: pointer;
 }
 
-/* 🔹 Add Job Button */
+/*  Add Job Button */
 .add-job-btn {
   background-color: #007bff;
   color: white;
@@ -205,33 +205,233 @@ p-table ::ng-deep tbody td {
 body .p-dialog-content {
   background-color: white !important;
 } 
-
-
+.p-toast {
+  max-width: 250px !important;  /* Smaller width */
+  right: 15px !important;  /* Keep aligned to the right */
+  top: 15px !important;  /* Keep aligned to the top */
+}
+.p-toast-message {
+  font-size: 0.85rem !important;  /* Smaller text */
+  padding: 8px 10px !important;  /* Adjust padding */
+  min-height: 45px !important;  /* Decrease height */
+}
+.p-toast-close-icon {
+  font-size: 0.75rem !important;  /* Smaller close icon */
+  width: 18px !important;
+  height: 18px !important;
+}
 
 /*  Responsive Design */
 @media (max-width: 1024px) {
   .page-container {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    padding:0px;
+    margin: 0;
   }
 
-  .job-list-container,
+  .job-list-container
+   {
+    width: 100%;
+    max-width: 100%;
+    height:auto;
+    padding: 0px;
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }
+  
+  .job-table {
+    width: 100%; /* Ensure the table takes full width */
+    table-layout: auto; /* Allow table to adjust column widths */
+  }
+
   .chart-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 90%;
+    height :auto;
+    margin-top: 20px;
+    overflow-x: auto;
+    margin-top: 5px;
   }
-
   .controls-container {
     flex-direction: column;
-    align-items: center;
+    gap: 10px; /* Add spacing between controls */
+    width: 100%;
+    max-width: 90%;
+    padding: 5px; 
+    height: auto;
+  }
+  .search-input {
+    width: 100%; /* Make search input take full width */
+    /* Increase button size */
+    font-size: 10px;
+    height:30px;
+    padding: 5px;
+    line-height: normal;
+  }
+  .add-job-btn {
+    width: 100%; /* Make button take full width */
+    text-align: center;
+    padding: 5px 10px;
+    font-size: 12px;
+    height:20px;
+    line-height: normal;
   }
   p-table ::ng-deep tbody td {
-    height: 10px;  
+    height: 50px;  
     padding: 5px; 
     font-size: 12px;
-    vertical-align: middle; /
+    vertical-align: middle; 
     
   }
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #857fc0;
+    color: white;
+    font-size:10px;
+    padding: 10px 10px; 
+    width: 100%;
+    position:fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+     z-index: 1000; 
+  }
+  
+  /*  Search, Level Dropdown & Add Job (Aligned Horizontally) */
+  .controls-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /*  Search Bar */
+  .search-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-right: 5px;
+    width: 100%; /* Make search input take full width */
+    font-size: 12px; /* Reduce font size */
+    height: 30px; /* Adjust height */
+    padding: 5px;
+  }
+  .search-btn {
+    font-size: 12px; /* Reduce font size */
+    padding: 5px; /* Adjust padding */
+    height: 30px; /* Adjust height */
+    width: 30px; /* Adjust width */
+  }
+  .edit-btn,
+  .delete-btn {
+    font-size: 12px; /* Reduce font size */
+    padding: 4px; /* Reduce padding */
+    width: 15px; /* Adjust width */
+    height: 15px; /* Adjust height */
+  }
 
+  .edit-btn .pi,
+  .delete-btn .pi {
+    font-size: 10px; /* Adjust icon size */
+  }
+  
+  /* .search-btn {
+    background-color: white;
+    color: #007bff;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+  } */
+  
+  /*  Add Job Button */
+  /* .add-job-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  } */
+  p-table ::ng-deep .p-datatable-wrapper {
+    max-height: 500px; /* Adjust height based on your UI */
+    overflow-y: auto; /* Enables vertical scrolling */
+  }
+  /* p-table ::ng-deep thead {
+    display: block;
+    width: 100%;
+  } */
+  /* Fix table header (th) at the top */
+  p-table ::ng-deep thead th {
+    background-color: #178309 !important;  /* Set background color */
+    color: white !important;              /* Change text color to white */
+    font-size: 10px;                       /* Increase font size */
+    padding: 2px !important;              /* Add padding */
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1000;  /* Ensure header stays on top */
+    
+    
+  }
+  p-table ::ng-deep tbody {
+    display: block;
+    max-height: 500px; /* Adjust based on UI */
+    overflow-y: auto;
+  }
+  p-table ::ng-deep tbody tr {
+    display: table;
+    width: 90%;
+    table-layout: fixed; /* Ensures columns align */
+  }
+  p-table ::ng-deep thead,
+  p-table ::ng-deep tbody tr {
+    display: table;
+    width: 90%;
+    table-layout: fixed;
+  }
+  
+  
+  /* Increase height of table cells (td) */
+  p-table ::ng-deep tbody td {
+    height: 10px;  /* Increase row height */
+    padding: 5px; /* Add padding */
+    font-size: 10px;
+    vertical-align: middle; /* Align text to center vertically */
+    
+  }
+  
+  /* Prevent overlapping: Ensure the table has enough spacing */
+  .job-table {
+    border-collapse: separate !important;
+    border-spacing: 0;
+  }
+  .p-toast {
+    max-width: 180px !important;  /* Reduce width for smaller screens */
+    right: 5px !important;
+    top: 5px !important;
+  }
+  .p-toast-message {
+    font-size: 0.8rem !important;
+    padding: 5px 6px !important;
+    min-height: 35px !important;
+  }
+  
+  .p-toast-close-icon {
+    font-size: 0.65rem !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
 
 } 
