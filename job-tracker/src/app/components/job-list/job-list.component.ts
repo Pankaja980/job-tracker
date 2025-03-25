@@ -10,7 +10,7 @@ import { ChartModule } from 'primeng/chart';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Job } from '../../models/job';
 import * as JobActions from '../../state/job-category/actions';
-import { selectJobs } from '../../state/job-category/selector';
+import { selectJobs ,selectJobStatusCounts} from '../../state/job-category/selector';
 import { JobFormComponent } from '../job-form/job-form.component';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -21,6 +21,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+//import { selectStatusCounts } from '../state/job.selectors';
 //import { PaginatorModule } from 'primeng/paginator';
 import {
   FormsModule,
@@ -93,9 +94,13 @@ export class JobListComponent implements OnInit {
   //   this.jobForm.patchValue(job); //  Pre-fill form with job details
   //   this.displayDialog = true;
   // }
+  chartData!: ChartData<'doughnut', number[], string | string[]>;
+    
+
+  legendData: { label: string, color: string, count: number }[] = [];
 
   levelChartData: ChartData<'bar'> = { labels: [], datasets: [] };
-  levelChartOptions: ChartOptions = { responsive: true };
+  //levelChartOptions: ChartOptions = { responsive: true };
   // levelChartOptions: ChartOptions<'bar'> = {
   //   responsive: true,
   //   plugins: {
@@ -140,7 +145,26 @@ export class JobListComponent implements OnInit {
       jobLevel: new FormControl('', Validators.required),
       jobStatus: new FormControl('', Validators.required),
     });
+    this.store.select(selectJobStatusCounts).subscribe(statusCounts => {
+      if (!statusCounts) return;
+
+     
+
+      this.chartData = {
+        labels:Object.keys(statusCounts),
+        datasets: [{
+          data: Object.values(statusCounts),
+          backgroundColor: ['Tomato', 'DodgerBlue', 'MediumSeaGreen', 'Violet', 'Gray'],
+        }],
+      };
+      
+      
+      
+    });
   }
+  
+  
+  
   onSearch(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.searchText = inputElement.value.toLowerCase();
@@ -223,20 +247,20 @@ export class JobListComponent implements OnInit {
         },
       ],
     };
-    this.levelChartOptions = {
-      responsive: true,
-      maintainAspectRatio: false, // Allows custom height/width
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            font: {
-              size: 16, // Increase font size
-            },
-          },
-        },
-      }
-  }
+    // this.levelChartOptions = {
+    //   responsive: true,
+     // maintainAspectRatio: false, // Allows custom height/width
+      // plugins: {
+      //   legend: {
+      //     position: 'top',
+      //     labels: {
+      //       font: {
+              //size: 16, // Increase font size
+  //           },
+  //         },
+  //       },
+  //     }
+  // }
 }
 
   getJobLevels(job: Job): string {

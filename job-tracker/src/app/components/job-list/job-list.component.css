@@ -163,9 +163,10 @@ p-table ::ng-deep tbody td {
   display: flex;
   padding:5px;
    width: 100%;
-  max-width: 600px; 
-  height: 300px;  
+  max-width: 350px; 
+  height: 600px;  
    margin: auto;
+   flex-direction: column;
 }
 .p-table thead {
   background-color: #007bff; 
@@ -205,6 +206,26 @@ p-table ::ng-deep tbody td {
 body .p-dialog-content {
   background-color: white !important;
 } 
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  span {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .color-box {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 50%;
+  }
+}
+
 
 
 /*  Responsive Design */
@@ -214,6 +235,7 @@ body .p-dialog-content {
     align-items: stretch;
     padding:0px;
     margin: 0;
+    overflow-y: auto; 
   }
 
   .job-list-container
