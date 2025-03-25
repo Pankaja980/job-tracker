@@ -1,77 +1,74 @@
-<!-- <p-dialog [(visible)]="displayDialog" [modal]="true" header="Add/Edit Job"> -->
+<!-- PrimeNG Dialog -->
 
-<form [formGroup]="jobForm"  class="form-container" (ngSubmit)="onSubmit()">
-  <div class="p-fluid">
-    <!--  Job Title -->
-    <div class="p-field">
-      <label for="jobTitle">Job Title</label>
-      <input
-        id="jobTitle"
-        type="text"
-        placeholder="Enter job title"
-        formControlName="title"
-      />
-    </div>
+  <form [formGroup]="jobForm" class="form-container" (ngSubmit)="onSubmit()">
+    <div class="p-fluid">
+      <!-- Job Title -->
+      <div class="p-field">
+        <label for="jobTitle">Job Title</label>
+        <input
+          pInputText
+          id="jobTitle"
+          type="text"
+          placeholder="Enter job title"
+          formControlName="title"
+        />
+      </div>
+      <br>
 
-    <!--  Company Name -->
-    <div class="p-field">
-      <label for="company">Company</label>
-      <input
-        id="company"
-        type="text"
-        placeholder="Enter company name"
-        formControlName="company"
-      />
-    </div>
+      <!-- Company Name -->
+      <div class="p-field">
+        <label for="company">Company</label>
+        <input
+          pInputText
+          id="company"
+          type="text"
+          placeholder="Enter company name"
+          formControlName="company"
+        />
+      </div>
+      <br>
 
-    <!--  Job Level Dropdown -->
-    <div class="p-field">
-      <label for="jobLevel">Job Level</label>
-      <div class="dropdown-container">
-        <select id="jobLevel" formControlName="level">
-          <option value=" "></option>
-          <!-- <option *ngFor="let level of jobLevels" [value]="level">{{ level }}</option> -->
-          <!-- placeholder="Select Job Level" -->
-          <option
-            *ngFor="let level of ['Entry Level', 'Mid Level', 'Senior Level']"
-            [value]="level"
-          >
-            {{ level }}
-          </option>
-        </select>
+      <!-- Job Level Dropdown -->
+      <div class="p-field">
+        <label for="jobLevel">Job Level</label><br>
+        <p-dropdown
+          id="jobLevel"
+          formControlName="level"
+          [options]="jobLevels"
+          placeholder="Select Job Level"
+        ></p-dropdown>
+      </div>
+<br>
+      <!-- Job Status Dropdown -->
+      <div class="p-field">
+        <label for="jobStatus"><strong>Job Status</strong></label><br>
+        <p-dropdown
+          id="status"
+          formControlName="status"
+          [options]="jobStatuses"
+          placeholder="Select Job Status"
+          [scrollHeight]="'100px'"
+        ></p-dropdown>
+      </div>
+
+      <br />
+      <!-- Save & Cancel Buttons -->
+      <div class="button-group">
+        <button
+          pButton
+          type="submit"
+          label="Save"
+          icon="pi pi-check"
+          class="p-button-success"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Cancel"
+          (click)="onCancel()"
+          class="p-button-secondary"
+        ></button>
       </div>
     </div>
+  </form>
 
-    <!--  Job Status Dropdown -->
-    <div class="p-field">
-      <label for="jobStatus"><strong>Job Status</strong></label>
-      <div class="dropdown-container">
-        <select id="jobStatus" formControlName="status">
-          <option value=""></option>
-          <option *ngFor="let status of jobStatuses" [value]="status">
-            {{ status ||'Applied' }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <br />
-    <!--  Save Button -->
-    <div class="button-group">
-      <button
-        pButton
-        type="submit"
-        label="Save"
-        icon="pi pi-check"
-        class="p-button-success"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Cancel"
-        (click)="onCancel()"
-        class="p-button-secondary"
-      ></button>
-    </div>
-  </div>
-</form>
-<!-- </p-dialog> -->

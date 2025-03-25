@@ -7,9 +7,9 @@
     font-style: inherit;
     font-weight: inherit;
   } */
-  /* body { */
-    /* font-family: Arial, sans-serif; Replace with your preferred default font */
-/* } */
+  body { 
+     font-family: Arial, sans-serif; /*Replace with your preferred default font */
+}
 /* Ensure the delete dialog has a white background */
 .ui-dialog .ui-dialog-content {
     background-color: white !important;

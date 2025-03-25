@@ -8,17 +8,35 @@
     placeholder="Choose a level">
   </p-dropdown>
 </div> -->
-<label for="levelSelect"><strong></strong></label>
+<!-- <label for="levelSelect"><strong></strong></label>
 <div class="dropdown-container" >
   <select id="levelSelect" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
- >
+  >
     <option value="">All</option>
     <option *ngFor="let level of jobLevels$ | async" [value]="level.value">
       {{ level.label }}
     </option>
-  </select>
+  </select> -->
   <!-- <button class="dropdown-button" (click)="toggleDropdown()">▼</button> -->
-</div>
+<!-- </div> -->
+<p-dropdown 
+id="levelSelect"
+*ngIf="(jobLevels$ | async) as jobLevels; else emptyList " 
+[options]="jobLevels"
+optionLabel="label" 
+optionValue="value" 
+[(ngModel)]="selectedCategory" 
+(onChange)="onCategoryChange($event.value)"
+placeholder="Select Job Level" 
+styleClass="w-full md:w-20rem">
+</p-dropdown>
+<ng-template #emptyList>
+  <p-dropdown 
+    [options]="[]" 
+    placeholder="No Job Levels Available">
+  </p-dropdown>
+</ng-template>
+
 
 
 <!-- Display filtered jobs

@@ -17,6 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-job-form',
@@ -30,20 +31,23 @@ import { DialogModule } from 'primeng/dialog';
     ButtonModule,
     DialogModule,
     ReactiveFormsModule,
+    InputTextModule,
   ], // ✅ Ensure proper module imports
 })
 export class JobFormComponent implements OnInit {
   @Input() job: Job | null = null;
-  @Input() jobLevels: string[] = []; // 🔹 Job levels passed as input
+  @Input() displayDialog: boolean = false; 
+ // @Input() jobLevels: string[] = []; // 🔹 Job levels passed as input
   @Output() saveJob = new EventEmitter<Job>();
   @Output() cancel = new EventEmitter<void>();
 
-  displayDialog: boolean = false;
+ // displayDialog: boolean = false;
   jobForm!: FormGroup;
   levelOptions: { label: string; value: string }[] = []; // 🔹 Pre-processed dropdown options
   statusOptions: { label: string; value: string }[] = []; // 🔹 Pre-processed status options
   // selectedJobLevel: string = '';
   // selectedJobStatus: string = '';
+  jobLevels = ['Entry Level', 'Mid Level', 'Senior Level'];
   jobStatuses: string[] = [
     'Applied',
     'Interview Scheduled',

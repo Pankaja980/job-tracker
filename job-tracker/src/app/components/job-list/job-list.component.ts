@@ -33,7 +33,8 @@ import { JobCategorySelectorComponent } from '../job-category-selector/job-categ
 import { ChartData, ChartOptions } from 'chart.js';
 //import { JobItemComponent } from '../job-item/job-item.component';
 //import { addJob } from '../../state/job-category/actions';
-
+//import { selectJobs } from '../../state/job-category/selector';
+//import { Tooltip } from 'primeng/tooltip';
 @Component({
   selector: 'app-job-list',
   standalone: true,
@@ -66,7 +67,7 @@ export class JobListComponent implements OnInit {
   selectedLevel$ = this.selectedLevelSubject.asObservable();
   selectedStatus: string = '';
   isEditMode: boolean = false;
-  jobForm: FormGroup;
+  jobForm!: FormGroup;
   editingJobId: number | null = null;
 
   //first = 0; // First page index
@@ -119,15 +120,11 @@ export class JobListComponent implements OnInit {
     private store: Store,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private cdr: ChangeDetectorRef //to trigger change detection and the view is updated.
+    private cdr: ChangeDetectorRef ,//to trigger change detection and the view is updated.
+   // private tooltip: Tooltip
   ) {
     this.jobs$ = this.store.select(selectJobs);
-    this.jobForm = new FormGroup({
-      title: new FormControl('', Validators.required),
-      company: new FormControl('', Validators.required),
-      jobLevel: new FormControl('', Validators.required),
-      jobStatus: new FormControl('', Validators.required),
-    });
+    
   }
 
 
@@ -137,6 +134,12 @@ export class JobListComponent implements OnInit {
     this.jobs$.subscribe((jobs) => this.updateChart(jobs)); // Updates chart only when job list changes
     this.filteredJobs$ = this.jobs$;
     this.applyFilters();
+    this.jobForm = new FormGroup({
+      title: new FormControl('', Validators.required),
+      company: new FormControl('', Validators.required),
+      jobLevel: new FormControl('', Validators.required),
+      jobStatus: new FormControl('', Validators.required),
+    });
   }
   onSearch(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -262,12 +265,21 @@ export class JobListComponent implements OnInit {
   // }
 
   addJob(): void {
-    //this.jobForm.reset();
+    //this.tooltip.hide();
+    this.jobForm.reset();
     this.selectedJob = null;
     this.displayDialog = true;
     this.isEditMode = false;
     this.editingJobId = null;
-    this.jobForm.reset();
+    // this.jobForm.reset({
+    //   title: '',
+    //   company: '',
+    //   jobLevel: '',
+    //   jobStatus: 'Applied', // Set a default value if needed
+    // });
+    this.cdr.detectChanges();
+    
+
     //this.selectedJob = null;
     // this.displayDialog = true;
     // if (this.selectedJob) {
@@ -376,6 +388,7 @@ export class JobListComponent implements OnInit {
       this.store.dispatch(
         JobActions.addJob({
           job: { ...job, id: Math.floor(Math.random() * 10000) },
+          
         })
       );
       this.messageService.add({
@@ -387,7 +400,13 @@ export class JobListComponent implements OnInit {
     this.isEditMode = false; // Reset edit mode
     this.editingJobId = null;
     this.displayDialog = false;
-    this.jobForm.reset();
+    this.jobForm.reset({
+      title: '',
+      company: '',
+      jobLevel: '',
+      jobStatus: 'Applied', // Set a default value if needed
+    });
+    this.cdr.detectChanges();
   }
   onCancel(): void {
     this.displayDialog = false; // Close dialog

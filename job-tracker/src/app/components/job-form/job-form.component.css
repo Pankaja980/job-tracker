@@ -11,18 +11,18 @@
     flex-direction: column;
     gap: 15px;
   } */
-  .form-container {
+  /*.form-container {
     width: 400px; /* Adjust the width as needed */
     /*max-width: 800px;
     margin: 0 auto; /* Center the form horizontally */
-    padding: 10px; /* Add padding for spacing */
-    font-size: 1.2rem;
+   /* padding: 10px; /* Add padding for spacing */
+   /* font-size: 1.2rem;
    /* height:auto;
     /*background-color: #f9f9f9;  Optional: Add a background color */
     /*border: 1px solid #ccc; /* Optional: Add a border */
     /*border-radius: 8px; /* Optional: Add rounded corners */
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  Optional: Add a shadow */
-  }
+ /* }
   /* Form title */
   /* h3 {
     text-align: center;
@@ -31,6 +31,14 @@
   } */
   
   /* Labels */
+  .form-container {
+    min-height: 350px; /* Adjust height */
+    width:450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Adjusts spacing */
+  }
+  
   label {
     font-size: 15px;
     font-weight: bold;

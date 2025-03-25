@@ -8,6 +8,7 @@ import { loadJobLevels, loadJobs,  } from '../../state/job-category/actions';
 import { selectJobLevels, selectJobs } from '../../state/job-category/selector';
 import { Job } from '../../models/job';
 //import { HttpClient } from '@angular/common/http';
+//import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-job-category-selector',
@@ -17,7 +18,7 @@ import { Job } from '../../models/job';
   styleUrl: './job-category-selector.component.css',
 })
 export class JobCategorySelectorComponent implements OnInit {
-  jobLevels$: Observable<{ label: string; value: string }[]> = new Observable();
+  jobLevels$: Observable<{ label: string; value: string }[]> = new Observable<{ label: string; value: string }[]>();
   jobs$: Observable<Job[]> = new Observable();
   filteredJobs$: Observable<Job[]>  = new Observable();
 
@@ -39,7 +40,9 @@ export class JobCategorySelectorComponent implements OnInit {
     this.store.dispatch(loadJobs());
 
     this.jobLevels$ = this.store.select(selectJobLevels).pipe(
-      map((levels) => levels.map((level) => ({ label: level, value: level })))
+      map((levels: string[] |null) =>levels
+      ? levels.map(level => ({ label: level, value: level})):[]
+    )
     );
 
     this.jobs$ = this.store.select(selectJobs);
@@ -56,13 +59,19 @@ export class JobCategorySelectorComponent implements OnInit {
   );
   }
 
-  onCategoryChange(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Explicitly cast to HTMLSelectElement
-    const category = target?.value || '';
-    this.selectedCategorySubject.next(category);
-    this.selectedCategoryChange.emit(category);
+  // onCategoryChange(event: Event): void {
+  //   const target = event.target as HTMLSelectElement; // Explicitly cast to HTMLSelectElement
+  //   const category = target?.value || '';
+  //   this.selectedCategorySubject.next(category);
+  //   this.selectedCategoryChange.emit(category);
+  //   this.filteredJobs$.subscribe(filteredJobs => this.filteredJobsChange.emit(filteredJobs));
+  // }
+  onCategoryChange(selectedValue: string): void {
+    this.selectedCategorySubject.next(selectedValue);
+    this.selectedCategoryChange.emit(selectedValue);
     this.filteredJobs$.subscribe(filteredJobs => this.filteredJobsChange.emit(filteredJobs));
   }
+  
   toggleDropdown(): void {
     const selectElement = document.getElementById('levelSelect') as HTMLSelectElement;
     selectElement?.focus(); // Opens the dropdown when clicked
