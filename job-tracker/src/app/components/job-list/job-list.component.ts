@@ -394,27 +394,7 @@ export class JobListComponent implements OnInit {
     this.jobForm.reset(); // Reset form
   }
  
-  confirm1(event: Event) {
-    this.confirmationService.confirm({
-        target: event.target as EventTarget,
-        message: 'Are you sure you want to proceed?',
-        icon: 'pi pi-exclamation-triangle',
-        rejectButtonProps: {
-            label: 'Cancel',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptButtonProps: {
-            label: 'Save'
-        },
-        accept: () => {
-            this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-        },
-        reject: () => {
-            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-        }
-    });
-}
+  
 
 
 }

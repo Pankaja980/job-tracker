@@ -205,21 +205,7 @@ p-table ::ng-deep tbody td {
 body .p-dialog-content {
   background-color: white !important;
 } 
-.p-toast {
-  max-width: 250px !important;  /* Smaller width */
-  right: 15px !important;  /* Keep aligned to the right */
-  top: 15px !important;  /* Keep aligned to the top */
-}
-.p-toast-message {
-  font-size: 0.85rem !important;  /* Smaller text */
-  padding: 8px 10px !important;  /* Adjust padding */
-  min-height: 45px !important;  /* Decrease height */
-}
-.p-toast-close-icon {
-  font-size: 0.75rem !important;  /* Smaller close icon */
-  width: 18px !important;
-  height: 18px !important;
-}
+
 
 /*  Responsive Design */
 @media (max-width: 1024px) {
