@@ -8,7 +8,8 @@
   <!-- <p-confirmDialog></p-confirmDialog> -->
   <div class="top-nav">
     
-    <h1>Job Tracker</h1>
+    <h1 class="job-tracker">Job-Tracker Application</h1>
+    <div class="nav-right">
     <div class="search-container">
       <!-- <button
         pButton
@@ -19,7 +20,7 @@
       <p-iconfield>
         <p-inputicon styleClass="pi pi-search" />
         <input type="text" 
-        pInputText placeholder="      Search for job"
+        pInputText placeholder="Search for job"
         (input)="onSearch($event)" 
         class="search-input"/>
     </p-iconfield>
@@ -31,10 +32,11 @@
         class="search-input"
       /> -->
     </div>
-
+    <div class="category-container">
+      <label style="margin-right: 5px;">Category:</label>
     <app-job-category-selector (selectedCategoryChange)="onLevelChange($event)">
     </app-job-category-selector>
-
+</div>
     <!-- <button
       pButton
       type="button"
@@ -57,14 +59,17 @@
 ></app-job-form> -->
 
   </div>
+  </div>
   <div class="page-container">
     <div class="job-list-container">
       <!--  Job List Table -->
       <p-table
         #dt
         [value]="(filteredJobs$ | async) || []"
+        [paginator]="true" 
+        [rows]="10" 
+        [rowsPerPageOptions]="[ 5,10]" 
         
-        responsiveLayout="scroll"
         [stripedRows]="true"
         class="job-table"
         [tableStyle]="{ 'min-width': '50rem' }"
@@ -88,7 +93,7 @@
             <td>{{ job.name }}</td>
             <td>{{ job.company.name }}</td>
             <td>{{ getJobLevels(job) }}</td>
-            <td>
+            <td>{{ job.status || 'Applied' }}
               <!-- <p-dropdown
                 *ngIf="isEditMode && selectedJob?.id === job.id"
                 [options]="jobStatusOptions"
@@ -96,9 +101,9 @@
                 (ngModelChange)="onStatusChange(job, $event.value)"
               > -->
               <!-- </p-dropdown> -->
-              <span *ngIf="!isEditMode || selectedJob?.id !== job.id">
+              <!-- <span *ngIf="!isEditMode || selectedJob?.id !== job.id">
                 {{ job.status || "Applied" }}
-              </span>
+              </span> -->
             </td>
             <td>
               <div class="action-buttons">
@@ -125,6 +130,7 @@
             </td>
           </tr>
         </ng-template>
+        <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="20" [rowsPerPageOptions]="[10, 20]" />
       </p-table>
       <!-- <div class="confirm-dialog-wrapper" >
         <p-toast />
@@ -156,6 +162,7 @@
       [modal]="true"
       [closable]="false"
       header="{{ selectedJob ? 'Edit Job' : 'Add Job' }}"
+      [style]="{ width: '400px' }"
     >
       <app-job-form
       
@@ -174,11 +181,12 @@
         type="bar"
         [data]="levelChartData"
         
-        style="width: 100%; height: 1000px"
+        style="width: 350px; height: 500px"
       ></p-chart>
+      <div align="center">
       <h3>Job status</h3>
-      <p-chart type="doughnut" [data]="chartData" [style]="{ width: '300px', height: '400px' }"></p-chart>
-
+      <p-chart type="doughnut" [data]="chartData" [style]="{ width: '500px', height: '600px' }"></p-chart>
+        </div>
       
     </div>
 

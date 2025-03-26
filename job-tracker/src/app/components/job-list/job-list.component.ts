@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 // import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // import { ConfirmationService } from 'primeng/api';
-import { PaginatorModule } from 'primeng/paginator';
+import { PaginatorModule ,PaginatorState} from 'primeng/paginator';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -71,8 +71,8 @@ export class JobListComponent implements OnInit {
   jobForm!: FormGroup;
   editingJobId: number | null = null;
 
-  //first = 0; // First page index
-  //rows = 10; // Default rows per page
+  first = 0; // First page index
+  rows = 10; // Default rows per page
 
   jobStatuses = [
     'Applied',
@@ -115,10 +115,10 @@ export class JobListComponent implements OnInit {
   searchText: string = '';
 
  
-  //  onPageChange(event: PaginatorState  ):void {
-  //   this.first = event.first ??0 ;
-  //   this.rows = event.rows ??10;
-  // }
+   onPageChange(event: PaginatorState  ):void {
+    this.first = event.first ??0 ;
+    this.rows = event.rows ??10;
+  }
 
 
   constructor(
@@ -157,6 +157,7 @@ export class JobListComponent implements OnInit {
           backgroundColor: ['Tomato', 'DodgerBlue', 'MediumSeaGreen', 'Violet', 'Gray'],
         }],
       };
+      
       
       
       

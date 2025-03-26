@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnInit,
   Output,
@@ -18,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { IftaLabelModule } from 'primeng/iftalabel';
 
 @Component({
   selector: 'app-job-form',
@@ -32,6 +34,7 @@ import { InputTextModule } from 'primeng/inputtext';
     DialogModule,
     ReactiveFormsModule,
     InputTextModule,
+    IftaLabelModule
   ], // ✅ Ensure proper module imports
 })
 export class JobFormComponent implements OnInit {
@@ -67,6 +70,7 @@ export class JobFormComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
   }
+  
   ngOnChanges(): void {
     // if (changes['job'] && this.job) {
     //   this.initializeForm(); // Reinitialize form when input changes
@@ -85,6 +89,10 @@ export class JobFormComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey() {
+    this.onCancel();
+  }
   initializeForm(): void {
     
     this.levelOptions = this.jobLevels.map((l) => ({ label: l, value: l }));

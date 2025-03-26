@@ -4,69 +4,88 @@
     <div class="p-fluid">
       <!-- Job Title -->
       <div class="p-field">
+        <p-iftalabel>
         <label for="jobTitle">Job Title</label>
         <input
           pInputText
           id="jobTitle"
           type="text"
-          placeholder="Enter job title"
+          
           formControlName="title"
+          class="p-inputtext-lg job-input-field"
+          pSize="large"
         />
+      </p-iftalabel>
       </div>
       <br>
 
       <!-- Company Name -->
       <div class="p-field">
+        <p-iftalabel>
         <label for="company">Company</label>
+        
         <input
           pInputText
           id="company"
           type="text"
-          placeholder="Enter company name"
+          
           formControlName="company"
+          class="p-inputtext-lg job-input-field"
+          pSize="large"
         />
+      </p-iftalabel>
       </div>
       <br>
+      
 
       <!-- Job Level Dropdown -->
       <div class="p-field">
-        <label for="jobLevel">Job Level</label><br>
+        <p-iftalabel label="Select Level">
+          <!-- <label for="jobLevel">Job Level</label> -->
         <p-dropdown
           id="jobLevel"
           formControlName="level"
           [options]="jobLevels"
-          placeholder="Select Job Level"
+          label="Level"
+          class="p-dropdown-lg job-input-field"
+          placeholder="Select Level"
         ></p-dropdown>
+      </p-iftalabel>
       </div>
-<br>
+      <br>
+
       <!-- Job Status Dropdown -->
       <div class="p-field">
-        <label for="jobStatus"><strong>Job Status</strong></label><br>
+        <p-iftalabel label="Select Status">
+        <!-- <label for="jobStatus"><strong>Job Status</strong></label> -->
         <p-dropdown
           id="status"
           formControlName="status"
           [options]="jobStatuses"
-          placeholder="Select Job Status"
+          class="p-dropdown-lg job-input-field"
           [scrollHeight]="'100px'"
+          placeholder="Select status"
         ></p-dropdown>
+      </p-iftalabel>
       </div>
 
-      <br />
+      
       <!-- Save & Cancel Buttons -->
-      <div class="button-group">
+      <div class="dialog-footer">
         <button
           pButton
           type="submit"
           label="Save"
           icon="pi pi-check"
-          class="p-button-success"
+          class="p-button-success p-button-lg"
+          [disabled]="jobForm.invalid"
         ></button>
         <button
           pButton
           type="button"
           label="Cancel"
           (click)="onCancel()"
-          class="p-button-secondary"
+          class="p-button-outlined p-button-lg"
         ></button>
       </div>
     </div>
