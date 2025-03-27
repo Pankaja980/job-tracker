@@ -2,13 +2,13 @@
     <p-confirmpopup />
   <!-- <p-confirmDialog></p-confirmDialog> -->
 
-<div class="main-container">
+<!-- <div class="main-container"> -->
   <!--  Navigation Bar (Fixed at Top) -->
  
   <!-- <p-confirmDialog></p-confirmDialog> -->
   <div class="top-nav">
     
-    <h1 class="job-tracker">Job-Tracker Application</h1>
+    <h1 class="job-tracker">Job-Tracker</h1>
     <div class="nav-right">
     <div class="search-container">
       <!-- <button
@@ -50,8 +50,8 @@
      (click)="addJob()"
      pTooltip="Add Job" 
   ></button>
-<!-- 
-<app-job-form
+
+<!-- <app-job-form
   [displayDialog]="displayDialog"
   [job]="selectedJob"
   (saveJob)="onJobSave($event)"
@@ -73,6 +73,7 @@
         [stripedRows]="true"
         class="job-table"
         [tableStyle]="{ 'min-width': '50rem' }"
+        emptyMessage="No jobs found"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -88,7 +89,7 @@
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-job>
+        <ng-template pTemplate="body" let-job >
           <tr>
             <td>{{ job.name }}</td>
             <td>{{ job.company.name }}</td>
@@ -181,7 +182,7 @@
         type="bar"
         [data]="levelChartData"
         
-        style="width: 350px; height: 500px"
+        style="width: 350px; height: 300px"
       ></p-chart>
       <div align="center">
       <h3>Job status</h3>
@@ -192,7 +193,7 @@
 
     <!-- <p-toast></p-toast> -->
   </div>
-</div>
+<!-- </div> -->
 
 
 

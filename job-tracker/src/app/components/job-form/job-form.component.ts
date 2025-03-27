@@ -35,7 +35,7 @@ import { IftaLabelModule } from 'primeng/iftalabel';
     ReactiveFormsModule,
     InputTextModule,
     IftaLabelModule
-  ], // ✅ Ensure proper module imports
+  ], // Ensure proper module imports
 })
 export class JobFormComponent implements OnInit {
   @Input() job: Job | null = null;
@@ -61,7 +61,7 @@ export class JobFormComponent implements OnInit {
   //   this.displayDialog = true;
   // }
 
-  // // ✅ Function to close the dialog
+  // //  Function to close the dialog
   // closeDialog() {
   //   this.displayDialog = false;
   // }

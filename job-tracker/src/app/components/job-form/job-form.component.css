@@ -32,7 +32,7 @@
   
   /* Labels */
   .form-container {
-    /* min-height: 350px; Adjust height */
+    min-height: 350px; /*Adjust height
     /* width:450px;  */
     display: flex;
     flex-direction: column;
@@ -51,6 +51,15 @@
     gap: 1rem;
     margin-top: 1rem;
   }
+  .p-dialog {
+    max-width: 500px; /* Set a max-width to prevent expansion */
+    min-width: 400px;
+  }
+  
+.p-dialog-content {
+  overflow-y: auto; /* Prevents expanding when content grows */
+  max-height: 80vh; /* Prevents excessive growth */
+}
   
   /* label {
     font-size: 15px;

@@ -31,7 +31,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { JobCategorySelectorComponent } from '../job-category-selector/job-category-selector.component';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData } from 'chart.js';
 //import { JobItemComponent } from '../job-item/job-item.component';
 //import { addJob } from '../../state/job-category/actions';
 //import { selectJobs } from '../../state/job-category/selector';
@@ -170,15 +170,15 @@ export class JobListComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     this.searchText = inputElement.value.toLowerCase();
     this.filterJobs();
-    this.filteredJobs$.subscribe(filteredJobs => {
-      if (filteredJobs.length === 0) {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'No Results',
-        detail: 'No jobs found matching your search criteria',
-      });
-      }
-    });
+    // this.filteredJobs$.subscribe(filteredJobs => {
+    //   if (filteredJobs.length === 0) {
+    //   this.messageService.add({
+    //     severity: 'info',
+    //     summary: 'No Results',
+    //     detail: 'No jobs found matching your search criteria',
+    //   });
+    //   }
+    // });
   }
   filterJobs(): void {
     //const searchWords = this.searchText.split(' ').filter(word => word);
