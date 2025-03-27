@@ -186,7 +186,7 @@ p-table ::ng-deep tbody td {
   /* margin-top: 0px; */
   /* overflow-y: auto; Enables vertical scrolling for the page */
   flex-grow: 1;
-  padding-top: 80px;
+  padding-top: 55px;
   align-items: flex-start;
   overflow: auto;
   /* height:(90vh-80px); */
